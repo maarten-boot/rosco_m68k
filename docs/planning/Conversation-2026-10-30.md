@@ -270,3 +270,6 @@
 **User:** pasted 3 issues found on the rosco-emulator side after our M12 changes (README `-bios` statement wrong; blank flash refilled at every reset; intelfsh SST changes not limited to the 39SF parts). No corrections needed.
 - **Mapping:** each issue matches one of the 3 unpushed commits on feature/sst-flash: cec16b598fa (README), 7b135b0c754 (flash_even/flash_odd regions, seed only without NVRAM), 061407363b6 (device IDs 0xB5–0xB7). Checked from the diff only; the emulator repo stays read-only.
 - **Docs:** Findings EMU-4…6 added; EMU-3 corrected (our own text repeated the `-bios` error); Plan row 11 annotated, row 16 added; Tests T-EMU4…6 added as pending.
+
+## 31. Tag round 6
+**User:** "pushed, tag it as review-round-6" (no corrections needed). A lightweight tag review-round-6 already existed on 3ebb4d5 (made by the user, as in round 5). Following the round-5 decision, Claude replaced it with an annotated tag on this log commit.
