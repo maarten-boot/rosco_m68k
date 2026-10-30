@@ -45,6 +45,7 @@ strtol (const char *__restrict s,
   register int c;
   register unsigned long cutoff;
   register int neg = 0, any, cutlim;
+  const char *nptr = s;
 
   /* if end ptr non-NULL, store string start by default */
   if (ptr) {
@@ -62,7 +63,7 @@ strtol (const char *__restrict s,
    */
   do {
     c = *s++;
-  } while (c == ' ');
+  } while (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\v' || c == '\f');
   if (c == '-') {
     neg = 1;
     c = *s++;
@@ -123,7 +124,8 @@ strtol (const char *__restrict s,
 
   /* if end ptr non-NULL, store ptr to the character past the last character interpreted */
   if (ptr) {
-    *ptr = (char *)s-1;
+    /* no conversion performed: C requires *ptr == nptr */
+    *ptr = (char *)(any ? s - 1 : nptr);
   }
   return (acc);
 }
