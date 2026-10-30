@@ -129,3 +129,17 @@
   - **Batch 1, hand-ported:** A-3 via `_data_load_start` (82377cc), 1468b51 with path rewrite (06ab09f), heartbeat bit A-10 (4f07454).
   - **Skipped:** 44c9b5a (68000 only), c8ec0ba (keyboard, D2 open), f54f73e (GALs).
 - **Regression (ROM 6b18ee0d…):** T-K3, T-B19, T-B7, T-A3, CPU banner 000/010/020, RAM size, SD boot and the libs build all PASS.
+
+## 12. M10 batch 2
+**User:** "yes, start batch 2; fyi in my board no additional hardware is fitted (except a 4M memory upgrade but that is already transparantly handled in the code)"
+- **Proposed correction:** "transparantly" → "transparently".
+- **D2 answered:** no V9958, no Xosera, no IDE drive, no keyboard; plus a 4 MB RAM upgrade.
+  - **Assumption, stated to the user:** the total is 5 MB (1 MB onboard + 4 MB). MAME regression runs use `-ram 5m` in addition to 1m.
+- **Consequence:** V-*/X-*, the keyboard backport c8ec0ba, and the IDE items B-8/B-9 drop to "defer / upstream only" for maint. The serial-console and SD paths are the focus.
+- **Batch 2 on maint/2.42:** 35 commits on top of v2.42 now (head 7380125).
+  - **Fixed:** B-4, A-1, A-4, A-9, A-2/B-14, E-1/E-8, E-2, E-3, E-4, E-5, E-6, B-17, B-1, B-3, B-2, D-1, D-2/B-13, D-4, D-6, D-11, D-12, D-7, D-13, D-14.
+  - **A-12:** fixed in code.
+  - **Doc commit:** B-12, B-20, E-4, E-5, E-9.
+  - **Mistake caught:** a vterm edit slip produced `"C","D"`; it was caught in the diff and amended.
+- **Regression (ROM 0915260b…):** all targeted tests PASS; D-8 still fails (batch 3). 5 MB RAM is OK.
+- **Open questions for the user:** whether to bump the firmware version string to 2.42.1; whether to make the develop ports now.

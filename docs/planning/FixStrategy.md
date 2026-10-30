@@ -6,7 +6,7 @@ _2026-10-30. No fixes have been made yet._
 | # | Decision |
 |---|----------|
 | D1 | **Option C:** branch `maint/2.42` (from tag v2.42) for the board; each new fix is also ported to `fix/<ID>` off `develop` |
-| D2 | Hardware: **not yet answered**. Batches keep the V9958/Xosera/IDE/keyboard items, but their priority is open |
+| D2 | **No extra hardware** (no V9958, Xosera, IDE or keyboard); 4 MB RAM upgrade (5 MB total, assumed). V-*, X-*, B-8/B-9 and c8ec0ba are deferred for maint; they are still reported upstream |
 | D3 | **CPU MC68010; build with `NO_KERNEL=true`.** Only `software/kernel_test` uses the ROM kernel API, so K-* is deferred |
 | D4 | **Upstream: draft issue texts** (one per confirmed finding, with repro). The user files them; no PR branches are pushed by Claude |
 | Use case | Standalone board running Kermit-loaded or SD-loaded (ROSCODE1.BIN) programs. **Later minix2 will use the ROM SD/bit-banged-SPI code (TRAP 13)**, so B-4, B-5, B-6, B-7, B-12 and B-20 move up |
@@ -54,7 +54,7 @@ D3 decided: NO_KERNEL=true on a 68010. D2 (fitted hardware) is still open.
 | — | c8ec0ba | keyboard reset/mode (only if you use the keyboard) | S | hardware |
 | A-13 | f54f73e | only together with the new r2 GALs; **skip unless the GALs change** | S | hardware |
 
-### Batch 2 — new small fixes (not fixed anywhere yet)
+### Batch 2 — new small fixes (not fixed anywhere yet) — **done on maint/2.42 2026-10-30**, except V-1/V-3 and X-* (hardware not fitted, D2), which are deferred for maint and kept for upstream issues. A-12 was fixed in code (serial PRINT preserves D0) rather than in the doc. B-12, B-20 and E-9 were fixed in the doc
 | ID | Fix | Effort | Verify |
 |----|-----|--------|--------|
 | A-1 | DUART D_CTRL: take the parameter from D2 (as documented), not D1 | S | T-A1 |

@@ -72,3 +72,32 @@ _Status legend: pending = not run; "Static" = can be verified from a build artef
 | A-10 | heartbeat bit | static: `btst #0` on the SYSFLAGS high byte (bit 8) |
 
 Note: the earlier test programs that call fixed ROM addresses (`t_div`, `t_misc` V-1) must use the new map addresses on maint builds. The kernel tests (T-K1, T-K2, T-K4) no longer apply with NO_KERNEL=true.
+
+### Batch 2 (2026-10-30, ROM SHA1 0915260b…, maint/2.42 @ 7380125, 35 commits on v2.42)
+| Test | Fix | Result |
+|------|-----|--------|
+| T-A1 | DEVICE_CTRL uses D2 | **PASS**: CSRA ← $BB (was $40) |
+| T-A2 | signed __divsi3/__modsi3 | **PASS**: −7/2 = −3, −7%2 = −1, 7/−2 = −3, 100/7 = 14 |
+| T-A9 | decompress returns long | **PASS**: corrupted stage2 → "Stage 2 failed; Stop." |
+| T-A12 | serial PRINT preserves D0 | **PASS**: D0 $DEADBEEF preserved |
+| T-E1 | TRAP 15 out-of-range | **PASS**: task 21 returns, SP unchanged ($FFF90) |
+| T-E2 | print 0 | **PASS**: "[0]" and "[42]" |
+| T-E3 | task 16 immediates | **PASS**: PROMPT_ON = 1 after D1=1 (was $10) |
+| T-E4 | task 8 = SDB_UPTICKS | **PASS**: task 8 value == SDB_UPTICKS |
+| T-E5 (new) | task 7 via EFP_CHECKCHAR | **PASS**: 0 before input, 1 after a char arrives on UART A; task 5 reads 'k' (`t_e5.asm` + `mame/harness_e5.py`) |
+| T-E6 | MOVEXY +1 | **PASS**: emits ESC[6;6H for (5,5) |
+| T-E8 (new) | TRAP 15 preserves A0 | **PASS**: A0 $12345678 preserved |
+| T-B1 | bounded BIN load | **PASS** with 1 MB and 5 MB RAM: "*** Kernel too large, would overwrite firmware memory", falls back to Kermit (no crash loop) |
+| T-B4 | CMD58 failure reported | **PASS** (fault injection at $E02150): card rejected, "No bootable media found" |
+| T-B17 | empty kernel refused | **PASS**: "*** Kernel file is empty", falls back to Kermit |
+| T-D1 | e68PrintStrReadNumSigned A1 | **PASS**: "PROMPT> " printed, value 123 read |
+| T-D2 | memcpy/strncpy return dest | **PASS** |
+| T-D4 | strtol whitespace/endptr | **PASS**: "\t42" → 42; endptr = nptr for "abc" |
+| T-D6 | calloc overflow | **PASS**: NULL |
+| T-D7 | libm.a contents | **PASS** (static): 288 math objects only; libm-test, 2dmaze, life, ehbasic, sdfat_demo build |
+| T-D11 | readline int index | **PASS**: 280 chars stored, ret = 280 |
+| T-D12 | vterm left/right | **PASS**: left ESC[3D, right ESC[3C |
+| T-D8 | printf | still **FAIL**, as expected: batch 3 item |
+| T-D5 | heap free last block | still not reproduced (OK) |
+| B-2, B-3, D-13, D-14 | Kermit bound, ELF filesz, gdb mask/SR | built; not runtime-tested (no host kermit/gdb; malformed ELF not built) |
+| Regression | boot 000/010/020, 5 MB RAM, SD boot, IDE boot, SDB magic | **PASS** |
