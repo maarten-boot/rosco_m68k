@@ -126,3 +126,14 @@ Build: all 30 `fix/*` branches merged into a temporary integration branch withou
 | E-4 task 8 = uptime | $00, $17 (heartbeat) ✗ | $2BC, $2D7 ✔ |
 | E-8 A0 preserved | $00E053F8 ✗ | $12345678 ✔ |
 | E-1 task 21 | bus error ✗ | returns, SP unchanged ✔ |
+
+## M12: flash ROM emulation (rosco-emulator `feature/sst-flash`, 2026-10-30)
+| Test | Result |
+|------|--------|
+| Boot: all m68k machines (000/010/020/030) × BIOS v250/v242 from the flash model, fresh NVRAM | **PASS**; `scripts/smoke-test.sh` all 5 machines PASS |
+| Chip ID via libs `sst_get_device_info` | **PASS**: even and odd report mfr $BF, dev $B7 (SST SST39SF040) |
+| Erase + program sector 127 on both chips, verify via CPU reads (`tests/flash/flash_program_test.c`) | first attempt **FAIL**: 3023/8192 mismatches (intelfsh returned array data outside a 64K window during erase). After the intelfsh SST fix: **PASS**, 0 mismatches; firmware word at $E00400 intact |
+| Persistence across MAME runs (same NVRAM dir) | **PASS**: second run finds the pattern |
+| updateflash end-to-end (v2.42 → 2.42.1 from SD, `tests/flash/updateflash_harness.py`) | first attempt: flash written correctly (0/40262 bytes differ) but the reboot hung (DUART not reset by the RESET instruction). After wiring RESET → DUART: **PASS**: reboots straight into "Classic 2.42.1"; cold restart with `-bios v242` still boots 2.42.1 from flash |
+| D-17 timeout with real flash model | normal programming never hits the cap (sector erase 125 ms) |
+| Intermediate commit 23a2ae3 builds; head builds; scripts use fresh NVRAM (`rosco-test.sh -e 'Classic 2.42.1'` with the maint ROM PASS) | **PASS** |

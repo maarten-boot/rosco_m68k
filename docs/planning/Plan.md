@@ -21,7 +21,7 @@
 | M10 | Implement batches 0–3 on `maint/2.42` (+ `fix/<ID>` ports off develop), re-running the matching tests after each batch | batches 0–2 + batch 3 (B-5, B-6, D-8, D-3) + version 2.42.1 done 2026-10-30 (35 commits on maint/2.42; all targeted tests PASS except D-8, which is batch 3); next: batch 3 (minix2 SD write path first) and fix/<ID> develop ports |
 | M10b | Port new fixes to `fix/<ID>` branches off develop; build + smoke test | done 2026-10-30 (30 branches; integration build OK; develop smoke test shows bugs fixed) |
 | M11 | Draft upstream issue texts (one per confirmed finding, with repro from tests/) in docs/planning/issues/ | done 2026-10-30: 21 grouped issues + index (issues/README.md); not filed (user files them) |
-| M12 | (side project, `../rosco-emulator`) Model the 2×SST39SF040 flash in MAME's rosco_m68k driver (`sst_39sf040_device`, even/odd byte lanes, NVRAM) so updateflash/sst_flash can be tested | proposed (user side question 2026-10-30) |
+| M12 | (side project, `../rosco-emulator`) Model the 2×SST39SF040 flash in MAME's rosco_m68k driver (`sst_39sf040_device`, even/odd byte lanes, NVRAM) so updateflash/sst_flash can be tested | done 2026-10-30 on rosco-emulator branch `feature/sst-flash` (4 commits, not pushed); updateflash end-to-end PASS |
 
 ## Crosscheck log
 | Date | Spec ↔ Plan ↔ Code result |
@@ -36,3 +36,4 @@
 | 2026-10-30 (8) | Version 2.42.1 (banner only) + batch 3 partial: code ↔ FixStrategy ↔ Tests consistent; new tests T-B5, T-B6, T-D3. Held: D-17 (needs real hardware and a recovery path). Process note: a CRLF→LF rewrite of bootstrap.asm was caught and amended; all changed files were checked for line-ending consistency. |
 | 2026-10-30 (9) | D-17 timeout + develop ports: maint ↔ fix/* ↔ Tests consistent. CRLF check now runs after every batch (it missed printf.c in batch 3; fixed by rewriting unpushed history). New upstream-only finding U-1. B-17 needs no develop port. |
 | 2026-10-30 (10) | M11: every finding still on develop is covered by exactly one issue; fixed-on-develop findings are listed as excluded. Every issue cites develop file:line (checked with git grep), its verification status, and existing tests/ files (all present). R-9/D4 met. |
+| 2026-10-30 (11) | M12: emulator changes ↔ Tests consistent. Two emulator bugs were found and fixed on the way (intelfsh SST erase status; RESET line not wired to the DUART). Behaviour change documented in the emulator README: with persistent flash NVRAM, `-bios` only applies to a blank NVRAM. Possible follow-up: D-17 verify step (option 3) is now testable. |

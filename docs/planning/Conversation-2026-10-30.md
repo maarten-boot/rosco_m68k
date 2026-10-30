@@ -183,3 +183,16 @@
 
 ## 16. Push command
 **User:** "can you give me a command to push all branches ?" (no corrections needed). Claude listed the local branches and gave the push commands; the user pushes.
+
+## 17. M12 — flash emulation in MAME
+**User:** "start M12" (no corrections needed).
+- **Emulator:** branch `feature/sst-flash` in ../rosco-emulator.
+  - Two SST_39SF040 devices replace the read-only ROM (lane-aware handlers; boot vectors read from flash).
+  - Blank flash is seeded from the BIOS at reset.
+  - INTELFLASH is enabled in rosco.lua.
+- **First build failed:** protected member pointer in the derived classes; fixed.
+- **Smoke tests pass;** chip IDs read correctly.
+- **Program test lost 3023/8192 bytes.** Root cause: intelfsh returned the erase status only within 64K of the erasing sector. Fixed for SST (datasheet), and the test then passed with persistence.
+- **updateflash end-to-end:** the flash was written correctly, but the reboot hung (no DUART reset on the RESET instruction). Wired the CPU reset_cb to the DUART; the update now reboots into 2.42.1, and a cold restart keeps it.
+- **Usability:** test scripts get a fresh -nvram_directory. Removed an nvram/ dir that my own pre-fix smoke run had created in the emulator repo (git-ignored).
+- **Emulator commits:** 55c081e, 23a2ae3 (builds on its own), bdcfddc, dab1d6b (README). Not pushed.

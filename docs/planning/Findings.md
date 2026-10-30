@@ -121,3 +121,8 @@ Refinements: A-12 (PRINT/PRINTLN trash D0) happens only on the serial console; t
 - **B-17 is already fixed on develop.** Its load.c refuses 0-byte kernels ("SEVERE: Loaded 0 bytes") and checks the `fl_attach_media()` result; the M3b report had said "unknown". No develop port is needed.
 - **U-1 (new, develop only):** `make MAME=true` on develop fails with `main2.c:228: label 'have_kernel' defined but not used [-Werror=unused-label]`. Upstream issue candidate.
 - **Develop ports:** 30 branches off develop: fix/A-1 fix/A-12 fix/A-2-B-14 fix/A-4 fix/A-9 fix/B-1 fix/B-12-B-20-E-4-E-5-E-9 fix/B-2 fix/B-3 fix/B-4 fix/B-5 fix/B-6 fix/D-1 fix/D-11 fix/D-12 fix/D-13 fix/D-14 fix/D-17 fix/D-2-B-13 fix/D-3 fix/D-4 fix/D-6 fix/D-7 fix/D-8 fix/E-1-E-8 fix/E-2 fix/E-3 fix/E-4 fix/E-5 fix/E-6 . B-6 is based on fix/B-5. The A-2 port touches only stage1/common.c, and the D-2 port only the libs (develop has no stage-local memcpy). B-1/B-3 use `FW_PRINT_C` (develop renamed mcPrint).
+
+## Emulator findings (M12, rosco-emulator)
+- **EMU-1 (fixed in 55c081e):** MAME `intelfsh` returned array data instead of the toggling erase status for reads more than 64K away from the erasing sector. For SST39SF0x0 the datasheet says DQ6 toggles at any address. Effect: flash tools polling the chip base saw an instant "done" and lost writes.
+- **EMU-2 (fixed in bdcfddc):** the rosco_m68k driver ignored the CPU's RESET output, so the DUART was not reset by the RESET instruction. Effect: updateflash's reboot into new firmware hung in the CPU-speed calibration.
+- **EMU-3 (by design, documented):** the ROM was previously read-only; it is now persistent flash NVRAM, seeded from `-bios` only when blank.
