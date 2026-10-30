@@ -21,7 +21,7 @@ static char sendbuf[2] = { 0x00, 0x00 };
 
 int readline(char *buf, int buf_size) {
   register char c;
-  register uint8_t i = 0;
+  register int i = 0;
 
   while (i < buf_size - 1) {
     c = buf[i] = mcInputchar();
@@ -51,7 +51,7 @@ int readline(char *buf, int buf_size) {
   }
 
   buf[buf_size-1] = 0;
-  return buf_size;
+  return buf_size - 1;      // number of characters stored
 }
 
 static void print_digit(uint8_t digit) {
