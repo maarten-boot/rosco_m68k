@@ -10,7 +10,7 @@ _Status: agreed scope 2026-10-30._
   - firmware: `code/firmware/rosco_m68k_firmware/**` at v2.42
   - libraries: `code/software/libs/src/**` at v2.42. Third-party `libm` is checked only for integration and build issues, not line by line.
 - **Comparison baseline:** `develop` (ec229f9), used to identify fixes made after v2.42.
-- **Method:** static review only (read the code). The MAME emulator at `../rosco-emulator` is available later to confirm findings at runtime. The quick emulator is **not** used for timing-sensitive checks.
+- **Method:** static review, then (from M7 on, as agreed 2026-10-30) a rebuild of v2.42 from source plus runtime confirmation in the MAME emulator at `../rosco-emulator` (`rosco_m68k_010 -bios v242`). The quick emulator is **not** used for timing-sensitive checks. Test-only firmware variants (e.g. the ATA-define build for B-8) live only in the scratchpad and are never flashed or committed.
 
 ## 2. Requirements
 | ID | Requirement | Source (log date) |
