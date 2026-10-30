@@ -209,10 +209,10 @@ INITDUART_ATBASE:
 ; Only used directly during early init; Becomes the default implementation
 ; of FW_PRINT (pointed to by the EFP table) and likely replaced later.
 ;
-; Trashes: D0, MFP_UDR
+; Trashes: MFP_UDR
 ; Modifies: A0 (Will point to address after null terminator)
 EARLY_PRINT_DUART:
-    move.l  A1,-(A7)                  ; Save A1...
+    movem.l D0/A1,-(A7)               ; Save D0 and A1...
     move.l  SDB_UARTBASE,A1           ; ... and get DUART base address
 
 .LOOP
@@ -226,7 +226,7 @@ EARLY_PRINT_DUART:
     
     bra.s   .LOOP                     ; and loop
 .PRINT_DONE:
-    move.l  (A7)+,A1                  ; Restore A1
+    movem.l (A7)+,D0/A1               ; Restore D0 and A1
     rts                               ; We're done
 
 
@@ -235,7 +235,7 @@ EARLY_PRINT_DUART:
 ; Only used directly during early init; Becomes the default implementation
 ; of FW_PRINT (pointed to by the EFP table) and likely replaced later.
 ;
-; Trashes: D0, MFP_UDR
+; Trashes: MFP_UDR
 ; Modifies: A0 (Will point to address after null terminator)
 EARLY_PRINTLN_DUART:
     bsr.s   EARLY_PRINT_DUART         ; Print callers message
