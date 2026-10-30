@@ -63,13 +63,24 @@ static int media_write(uint32_t sector, uint8_t *buffer, uint32_t sector_count) 
     return 0;
 }
 
+static bool load_range_allowed(uintptr_t start, size_t size);
+
 bool load_kernel_bin(void *file) {
     uint32_t start = sdb->upticks;
 
     int c;
     uint8_t *current_load_ptr = kernel_load_ptr;
     uint8_t b = 0;
-    while ((c = fl_fread(current_load_ptr, BLOCK_SIZE, 1, file)) > 0) {
+    while (true) {
+        // A raw binary has no size header, so check each block before
+        // reading it: never overwrite stage2, the stack or the SDB
+        if (!load_range_allowed((uintptr_t) current_load_ptr, BLOCK_SIZE)) {
+            FW_PRINT_C("\r\n*** Kernel too large, would overwrite firmware memory\r\n");
+            return false;
+        }
+        if ((c = fl_fread(current_load_ptr, BLOCK_SIZE, 1, file)) <= 0) {
+            break;
+        }
         current_load_ptr += c;
         if (++b == BLOCKS_PER_DOT) {
             FW_PRINT_C(".");
