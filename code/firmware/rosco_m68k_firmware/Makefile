@@ -64,6 +64,9 @@ WITH_BLOCKDEV?=true
 WITH_KERMIT?=true
 WITH_DEBUG_STUB?=true
 WITH_ATA?=true
+# ROM kernel is off by default (as on develop); only kernel_test uses it.
+# Build with NO_KERNEL=false to include it.
+NO_KERNEL?=true
 
 all: $(BINARY_EVEN) $(BINARY_ODD)
 
