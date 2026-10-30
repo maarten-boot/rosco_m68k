@@ -49,49 +49,49 @@ void vt_move_cursor_up (char* units)
     * being sent. Therefore, rather than convert integers to 
     * characters within these functions, it is left up to the user
     * to decide when and where to convert them, if necessary at all. */
-    char* cursor_command = (char*) calloc(1, 10);
+    char* cursor_command = (char*) calloc(1, 12);
 
     strncat(cursor_command, "[", 2);
     strncat(cursor_command, units, 8);
     strncat(cursor_command, "A", 2);
 
-    vt_nsend(cursor_command, 10);
+    vt_nsend(cursor_command, 12);
     free(cursor_command); cursor_command = NULL;
 }
 
 void vt_move_cursor_down (char* units)
 {
-    char* cursor_command = (char*) calloc(1, 10);
+    char* cursor_command = (char*) calloc(1, 12);
 
     strncat(cursor_command, "[", 2);
     strncat(cursor_command, units, 8);
     strncat(cursor_command, "B", 2);
 
-    vt_nsend(cursor_command, 10);
+    vt_nsend(cursor_command, 12);
     free(cursor_command); cursor_command = NULL;
 }
 
 void vt_move_cursor_left (char* units)
 {
-    char* cursor_command = (char*) calloc(1, 10);
-
-    strncat(cursor_command, "[", 2);
-    strncat(cursor_command, units, 8);
-    strncat(cursor_command, "C", 2);
-
-    vt_nsend(cursor_command, 10);
-    free(cursor_command); cursor_command = NULL;
-}
-
-void vt_move_cursor_right (char* units)
-{
-    char* cursor_command = (char*) calloc(1, 10);
+    char* cursor_command = (char*) calloc(1, 12);
 
     strncat(cursor_command, "[", 2);
     strncat(cursor_command, units, 8);
     strncat(cursor_command, "D", 2);
 
-    vt_nsend(cursor_command, 10);
+    vt_nsend(cursor_command, 12);
+    free(cursor_command); cursor_command = NULL;
+}
+
+void vt_move_cursor_right (char* units)
+{
+    char* cursor_command = (char*) calloc(1, 12);
+
+    strncat(cursor_command, "[", 2);
+    strncat(cursor_command, units, 8);
+    strncat(cursor_command, "C", 2);
+
+    vt_nsend(cursor_command, 12);
     free(cursor_command); cursor_command = NULL;
 }
 
