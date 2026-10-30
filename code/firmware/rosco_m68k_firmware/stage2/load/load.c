@@ -151,6 +151,13 @@ static long load_kernel_elf_phdr_load(void *file, Elf32_Phdr *phdr) {
         }
     }
 
+    // The file image must fit in the (range-checked) memory image, else the
+    // read below overruns the checked range and the memset length underflows
+    if (phdr->p_filesz > phdr->p_memsz) {
+        FW_PRINT_C("\r\n*** Invalid loadable segment size\r\n");
+        return -1;
+    }
+
     // Don't allow overwriting firmware-reserved areas, stage2, or stack
     if (!load_range_allowed(phdr->p_vaddr, phdr->p_memsz)) {
             FW_PRINT_C("\r\n*** Segment would overwrite firmware memory\r\n");
