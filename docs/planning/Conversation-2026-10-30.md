@@ -304,3 +304,9 @@
 
 ## 38. Tag round 9
 **User:** "pushed, tag it as review-round-9" (no corrections needed). Annotated tag on planning/session-docs, as for the earlier rounds.
+
+## 39. Crosscheck after round 9
+**User:** "pushed, now crosscheck spec, plan and code" (no corrections needed).
+- **Result:** consistent. Emulator merge is pushed (rosco-m68k-ram-bios = origin = dece8a1ff7c); 0 pending tests.
+- **Doc fixes:** Findings "merged locally" → pushed; old Tests batch-3 D-17 row ("MAME cannot test flash code") marked superseded. Plan crosscheck row (21) added.
+- **Open:** the emulator merge is untagged (last emulator tag review-round-2).

@@ -110,7 +110,7 @@ Note: the earlier test programs that call fixed ROM addresses (`t_div`, `t_misc`
 | T-B6 (new) | time-based SD timeouts | **PASS**: normal write 2 ticks; card held busy forever (inject d0=0 at $E02362) → write fails after 54 ticks ≈ 540 ms (500 ms limit) — `t_sdw_t.asm`, `mame/sdt_busy.dbg`. No-card boot still reaches Kermit in 3.5–4 s, same as v2.42 |
 | T-D8 | printf %e/%g/long long, _ftoa/_etoa | **PASS**: "%lld\|%d" → 7\|99; "%e\|%d" → 1.500000e+00\|99; %f(1e10) → 1.000000e+10 with n = strlen; %e of 1e10, 1e-5, 123456.789, 9.99999e7, 1.0, 0.0 all correct (0.0 was e-308) |
 | T-D3 (new) | memmove/memcmp | **PASS**: overlapping memmove both directions; memcmp sign correct. All 18 example programs build |
-| D-17 | sst_flash | **not changed**: MAME maps the ROM read-only (no SST command model), so flash code cannot be tested; held for a user decision |
+| D-17 | sst_flash | **not changed**: MAME maps the ROM read-only (no SST command model), so flash code cannot be tested; held for a user decision _(superseded: M12 added the flash model; D-17 options 2 and 3 were then done and tested, see below)_ |
 
 ### D-17 (timeout only) on maint/2.42
 | Test | Result |
