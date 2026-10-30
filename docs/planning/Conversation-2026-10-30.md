@@ -279,3 +279,6 @@
 - **rosco_m68k:** code unchanged; all branches equal origin; review-round-1…6 annotated.
 - **Emulator (read-only, inspected only):** feature/sst-flash is now pushed (origin = cec16b598fa), untagged after review-round-2.
 - **Doc fixes:** Findings EMU-4…6 note and Plan M12 updated to "pushed"; Spec R-8 ("0 pending") and R-12 now mention the 3 pending T-EMU tests. Plan crosscheck row (17) added.
+
+## 33. Tag round 7
+**User:** "pushed, tag it as review-round-7" (no corrections needed). Annotated tag on planning/session-docs, as for the earlier rounds.
