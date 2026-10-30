@@ -359,7 +359,7 @@ static size_t _ftoa(out_fct_type out, char* buffer, size_t idx, size_t maxlen, d
 #if defined(PRINTF_SUPPORT_EXPONENTIAL)
     return _etoa(out, buffer, idx, maxlen, value, prec, width, flags);
 #else
-    return 0U;
+    return idx;     // print nothing, but keep what was already written
 #endif
   }
 
@@ -507,6 +507,12 @@ static size_t _etoa(out_fct_type out, char* buffer, size_t idx, size_t maxlen, d
     conv.F /= 10;
   }
 
+  // zero has no meaningful log10; the estimate above yields -308
+  if (value == 0.0) {
+    expval = 0;
+    conv.F = 1.0;
+  }
+
   // the exponent format is "%+03d" and largest value is "307", so set aside 4-5 characters
   unsigned int minwidth = ((expval < 100) && (expval > -100)) ? 4U : 5U;
 
@@ -550,6 +556,19 @@ static size_t _etoa(out_fct_type out, char* buffer, size_t idx, size_t maxlen, d
   // rescale the float value
   if (expval) {
     value /= conv.F;
+  }
+
+  // if the mantissa rounds up to 10 at this precision (e.g. 1e10 scaled to
+  // 9.9999999...), renormalise so we print 1.0e+10 rather than 10.0e+09
+  if (minwidth) {
+    double half_ulp = 0.5;
+    for (unsigned int i = 0; i < prec; i++) {
+      half_ulp /= 10;
+    }
+    if (value + half_ulp >= 10.0) {
+      value /= 10;
+      expval++;
+    }
   }
 
   // output the floating part
