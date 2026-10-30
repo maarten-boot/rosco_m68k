@@ -313,3 +313,8 @@
 
 ## 40. Tag round 10
 **User:** "pushed, tag it as review-round-10" (no corrections needed). Annotated tag on planning/session-docs, as for the earlier rounds. The emulator merge stays untagged (not requested).
+
+## 41. Crosscheck after round 10
+**User:** "pushed, now crosscheck spec, plan and code" (no corrections needed).
+- **Result:** consistent, nothing new in this repo. Plan crosscheck row (22) added.
+- **Observed in ../rosco-emulator (not touched):** checkout on docs/crosscheck-2026-10-30 with 2 uncommitted files (its own Spec.md, Tests.md); master has PR #6 (feature/sst-flash) and PR #7 (docs/planning) merged.
