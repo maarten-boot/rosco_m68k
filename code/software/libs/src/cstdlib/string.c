@@ -41,6 +41,37 @@ void *memcpy(void *__restrict s1, const void *__restrict s2, size_t n) {
     return tbuf;
 }
 
+int memcmp(const void *s1, const void *s2, size_t n) {
+    const unsigned char *a = (const unsigned char *) s1;
+    const unsigned char *b = (const unsigned char *) s2;
+
+    for (; n > 0; n--, a++, b++) {
+        if (*a != *b) {
+            return *a - *b;
+        }
+    }
+    return 0;
+}
+
+void *memmove(void *s1, const void *s2, size_t n) {
+    // overlapping regions are allowed: copy backwards when dest is above src
+    uint8_t *to = (uint8_t*) s1;
+    const uint8_t *from = (const uint8_t*) s2;
+
+    if (to < from) {
+        while (n--) {
+            *to++ = *from++;
+        }
+    } else if (to > from) {
+        to += n;
+        from += n;
+        while (n--) {
+            *--to = *--from;
+        }
+    }
+    return s1;
+}
+
 void *memset(void *s, int c, size_t n) {
     // totally naive implementation, will do for now...
     uint8_t *buf = (uint8_t*) s;
