@@ -51,9 +51,8 @@ typedef struct {
  * Fetch device information from the flash ROM at `rom_base`,
  * populating it into the given `sst` struct.
  *
- * Normal reads will be unavailable during this call, so if the
- * flash you're getting info for is the system ROM, you should
- * disable interrupts!
+ * Normal reads will be unavailable during this call; interrupts
+ * are masked for its duration (and restored afterwards).
  */
 void sst_get_device_info(uint32_t rom_base, SSTDeviceId* sst);
 
@@ -73,8 +72,8 @@ const char* sst_get_device_name(SSTDeviceId *sst);
  * Normal reads will be unavailable during this call, and the
  * specified sector will be erased afterward (assuming success).
  *
- * If the flash you're erasing is the system ROM you should disable
- * interrupts.
+ * Interrupts are masked while the chip is busy, and the sector is
+ * verified to read back as all 0xFF; returns false otherwise.
  *
  * If the erased sector is one occupied by system ROM code you
  * should avoid any calls that rely on the system TRAPs
@@ -88,9 +87,9 @@ bool sst_sector_erase(uint32_t rom_base, uint8_t sector);
  * Normal reads will be unavailable during this call, and the
  * device will be erased afterward (assuming success).
  *
- * If the flash you're erasing is the system ROM, you should disable
- * interrupts and avoid any calls that rely on the system TRAPs
- * until you have a valid ROM again!
+ * Interrupts are masked while the chip is busy (not verified).
+ * If the flash you're erasing is the system ROM, avoid any calls
+ * that rely on the system TRAPs until you have a valid ROM again!
  */
 bool sst_chip_erase(uint32_t rom_base);
 
@@ -107,9 +106,11 @@ bool sst_chip_erase(uint32_t rom_base);
  * Normal reads will be unavailable during this call, and the
  * device will be erased afterward (assuming success).
  *
- * If the flash you're writing to the system ROM, you should disable
- * interrupts and avoid any calls that rely on the system TRAPs
- * until you have a valid ROM again!
+ * Interrupts are masked while the chip is busy, and the byte is read
+ * back afterwards: returns false if it does not match (e.g. because
+ * the sector was not erased - programming can only clear bits).
+ * If the flash you're writing is the system ROM, avoid any calls
+ * that rely on the system TRAPs until you have a valid ROM again!
  */
 bool sst_write_byte(uint32_t rom_base, uint32_t byte_addr, uint8_t data);
 
@@ -120,7 +121,8 @@ bool sst_write_byte(uint32_t rom_base, uint32_t byte_addr, uint8_t data);
  * unreadable after this call (until the command is completed).
  *
  * This will usually be followed by further writes to perform various
- * tasks, depending on the command sent.
+ * tasks, depending on the command sent. It does NOT mask interrupts:
+ * callers building their own sequences on the system ROM must do so.
  *
  * See https://ww1.microchip.com/downloads/en/DeviceDoc/20005022C.pdf
  * for valid command sequences.
