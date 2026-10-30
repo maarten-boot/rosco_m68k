@@ -27,6 +27,7 @@ static struct k_data k __attribute__ ((section ( ".kermit")));
 static struct k_response response __attribute__ ((section (".kermit")));
 
 extern uint8_t *kernel_load_ptr;
+extern char STAGE2_LOAD[];
 static uint8_t *current_load_ptr;
 
 static int inchk(struct k_data * k) {
@@ -90,6 +91,10 @@ static int readfile(struct k_data * k) {
 }
 
 static int writefile(struct k_data * k, UCHAR * s, int n) {
+    // The received kernel must end below stage2 (which is running this code)
+    if (n < 0 || (uintptr_t) current_load_ptr + (uint32_t) n > (uintptr_t) STAGE2_LOAD) {
+        return X_ERROR;
+    }
     memcpy(current_load_ptr, s, n);
     current_load_ptr += n;
     return X_OK;
