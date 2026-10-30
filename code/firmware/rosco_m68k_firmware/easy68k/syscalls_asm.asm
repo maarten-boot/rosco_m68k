@@ -248,15 +248,14 @@ SEND_CHAR:
 
 
 * ************************************************************************** *
-; TODO This is directly interfacing the the MFP - It should go through to the
-; default UART instead...
+; Goes through the default UART's CHECKCHAR EFP (the same device that
+; RECVCHAR reads from), so it works on r1.x (MFP) and r2.x (DUART).
+; A0 is free here: the TRAP 15 dispatcher saves and restores it.
 CHECK_RECV:
-    ifd REVISION1X
-    move.b  MFP_RSR,D0                  ; Get RSR
-    btst    #7,D0                       ; Is buffer_full bit set?
+    move.l  EFP_CHECKCHAR,A0            ; Default UART check function
+    jsr     (A0)                        ; D0.B nonzero if a char is waiting
+    tst.b   D0
     bne.s   .TRUE                       ; Yes - Go to set true
-    endif
-    ; TODO else for r2X
 
     move.b  #0,D1                       ; Else no - so false
     bra.w   EPILOGUE2                   
