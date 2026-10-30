@@ -26,8 +26,10 @@ TRAP_15_VECTOR_ADDR equ     TRAP_15_VECTOR*4
 ; D0 is expected to contain the task number (function code). Other arguments
 ; depend on the specific function - See README for details.
 EASY68K_TRAP_15_HANDLER:
+    move.l  A0,-(A7)                    ; Save A0 (EASy68K tasks preserve it)
     move.l  D0,-(A7)                    ; Save function code
     
+    andi.l  #$FF,D0                     ; Task number is D0.B only
     cmp.l   #20,D0                      ; Is function code in range?
     bhi.s   .DONE                       ; Nope, leave...
 
@@ -37,6 +39,8 @@ EASY68K_TRAP_15_HANDLER:
     jmp     (A0)                        ; ... then jump there
 
 .DONE
+    move.l  (A7)+,D0                    ; Restore function code...
+    move.l  (A7)+,A0                    ; ... and A0
     rte                                 ; That's all for now...
 
 JUMPTABLE:
@@ -66,6 +70,7 @@ JUMPTABLE:
 ; of the file to match!
 EPILOGUE:
     move.l  (A7)+,D0                    ; Restore function code
+    move.l  (A7)+,A0                    ; Restore A0
     rte
 
 * ************************************************************************** *
@@ -374,6 +379,7 @@ DISPLAYNUM_SIGNED_WIDTH:
 
 EPILOGUE2:
     move.l  (A7)+,D0                    ; Restore function code
+    move.l  (A7)+,A0                    ; Restore A0
     rte
 
 * ************************************************************************** *
