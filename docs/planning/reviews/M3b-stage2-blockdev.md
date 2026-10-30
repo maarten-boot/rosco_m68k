@@ -25,6 +25,7 @@ Develop note: blockdev moved to `stage1/blockdev/`, but ata.c, bbsd.c, bbspi.c, 
 | B-16 | No GPT/extended/superfloppy; FAT12 & exFAT (all SDXC >32 GB) rejected; only SPI CS0 tried | stage2/part/part.c; fat_io_lib | missing | low-med | high | no |
 | B-17 | `fl_attach_media` result ignored; 0-byte ROSCODE1.BIN "loads" and jumps to garbage | stage2/load/load.c:269,59-68 | bug | low | medium | unknown |
 | B-18 | ATA_DEBUG build doesn't compile (part.c:107,113); SEVERE message missing `[0m` (main2.c:106); rev1 red_led_off uses uninit D1; dead TODO in bbsd.c:83 | various | bug/todo | low | high | no |
+| B-19 ★ | **(added in M8)** In the release build, `ROSCO_M68K_ATA` reaches only gcc, not vasm, so FW_ATA_INIT/READ/WRITE/IDENT are stubs → IDE boot and TRAP 13 ATA are dead | blockdev/include.mk:14; blockdev/syscalls_asm.asm:334-420 | build bug | high | high (confirmed in MAME) | yes (d375bc2) |
 
 \* B-7 rated higher by main session: writing 0x08 to OPCR reprograms DUART output-port pin functions (OP3) on every SD multi-byte read — overlaps M3e item 478bac2.
 

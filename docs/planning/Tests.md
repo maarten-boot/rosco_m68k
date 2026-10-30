@@ -15,8 +15,8 @@ _Status legend: pending = not run; "Static" = can be verified from a build artef
 | T-A3 | A-3 | **Static:** link map / `objdump -h`: compare LOADADDR(.data) with `_code_end` and `_data_start`; list the .data symbols | .data initialisers shifted by sizeof(.early_data) | n/a (fixed by e2cec65) | **FAIL (bug confirmed, static)**: copy source `_code_end`=$E0A8DE is the CODE section (ATA routine), not .data LMA $E0A904; `selected_drive` gets $20 instead of $FF (harmless in this build, latent) |
 | T-A4 | A-4 | **Static:** vasm listing of rev2.asm:108; or MAME: execute an illegal opcode and read SR in the flash loop | immediate ≠ $0700; SR mask < 7 | mask 7 | **FAIL (bug confirmed, static)**: encoded `oriw #$02BC,SR` at $E00A1A/$E00A52/$E00AAA |
 | T-A1 | A-1 | Program: TRAP 14 fn 16, D0=0, D2=$BB, A0=device 0; watch CSRA write | CSRA ← $40 | CSRA ← $BB | **FAIL (bug confirmed)**: CSRA written $40 (requested $BB); console lost afterwards |
-| T-A2 | A-2 | Program (68010 build): compute (−7)/2 and (−7)%2 via the firmware's `__divsi3` | 0x7FFFFFFC / wrong remainder | −3 / −1 | pending |
-| T-A9 | A-9 | Corrupt one byte of the zipped stage2 in the ROM image; boot | boots garbage / hangs | "Stage 2 failed" message | pending |
+| T-A2 | A-2 | Program (68010 build): compute (−7)/2 and (−7)%2 via the firmware's `__divsi3` | 0x7FFFFFFC / wrong remainder | −3 / −1 | **FAIL (bug confirmed)**: −7/2=$7FFFFFFC, −7%2=1, 7/−2=0 (ROM `__divsi3`/`__modsi3` called directly) |
+| T-A9 | A-9 | Corrupt one byte of the zipped stage2 in the ROM image; boot | boots garbage / hangs | "Stage 2 failed" message | **Not reproduced (latent)**: corrupted stage2 → "Stage 2 failed; Stop." correctly. Zipped stage2 is only $3320 bytes; the bug needs ≥ 64 KiB |
 | T-A12 | A-12 | Set D0=$DEADBEEF, TRAP 14 fn 0 with a string | D0 changed | D0 preserved (per doc) | **FAIL (bug confirmed)**: D0 $DEADBEEF → $DEADBE00 |
 | T-E1 | E-1 | `move.l #21,d0; trap #15` | crash / jump to garbage | returns normally | **FAIL (bug confirmed)**: task 21 → bus error, debug_stub dump, warm boot |
 | T-E2 | E-2 | `moveq #0,d1; moveq #3,d0; trap #15` | nothing printed | "0" | **FAIL (bug confirmed)**: task 3 with 0 prints nothing; 42 prints "42" |
@@ -31,22 +31,23 @@ _Status legend: pending = not run; "Static" = can be verified from a build artef
 | T-B1 | B-1 | FAT SD image with a 750 KB ROSCODE1.BIN; boot | hang/crash near the end of load | load rejected or bounded | **FAIL (bug confirmed)**: 768000-byte BIN overwrites stage2 → bus error at PC=$0F0206 → warm boot reloads same file → **crash/reboot loop** |
 | T-B2 | B-2 | Kermit-send a file > 704 KB | corruption near $F0000 | transfer rejected | **Not run**: no Kermit sender on the host |
 | T-B4 | B-4 | SD model returning an error on CMD58 | boot proceeds with garbage card type | init error reported | **Partly confirmed** (fault injection at $E02118): init reports OK; stage2 then prints "Ignoring unrecognised SD card", no crash |
-| T-B8 | B-8 | IDE image > 128 GiB with a partition beyond LBA 2^28 | reads/writes wrap to low sectors | error or LBA48 | pending |
-| T-B17 | B-17 | 0-byte ROSCODE1.BIN on SD | "Loaded 0 bytes", jumps to garbage | load refused | pending |
+| T-B19 | B-19 | Boot from a normal FAT32 IDE image (partition at LBA 2048) on the stock v2.42 ROM | no "ATA Device 0:" line; "No bootable media found" | boots ROSCODE1.BIN from IDE | **FAIL (bug confirmed)**: FW_ATA_INIT disassembles to `moveq #1,d0; rts`. With `-DROSCO_M68K_ATA` added for vasm, the same image boots |
+| T-B8 | B-8 | IDE image > 128 GiB with a partition beyond LBA 2^28 | reads/writes wrap to low sectors | error or LBA48 | **FAIL (bug confirmed)** on an ATA-enabled test build (see B-19): partition at LBA 2^28+2048 → loaded the decoy at LBA 2048 |
+| T-B17 | B-17 | 0-byte ROSCODE1.BIN on SD | "Loaded 0 bytes", jumps to garbage | load refused | **FAIL (bug confirmed)**: "Loaded 0 bytes", jumps to $40000 → illegal instruction → warm boot |
 
 ## Library findings (build a test program against v2.42 libs)
 | ID | Finding | Steps | Expected if bug present | Pass criterion | Status |
 |----|---------|-------|-------------------------|----------------|--------|
-| T-D1 | D-1 | `e68PrintStrReadNumSigned("Enter: ")` | no or garbage prompt | "Enter: " printed | pending |
+| T-D1 | D-1 | `e68PrintStrReadNumSigned("Enter: ")` | no or garbage prompt | "Enter: " printed | **FAIL (bug confirmed)**: garbage (".....") printed instead of "PROMPT> "; the number was read correctly |
 | T-D2 | D-2 | `char b[8]; memcpy(b,"abc",4)==b` | false | true | **FAIL (bug confirmed)**: memcpy ret−dest = 4; strncpy also returns ≠ dest |
 | T-D5 | D-5 | Allocate until NULL; pre-fill memsize−32K with $FF; free the last block; malloc/free loop | heap corruption / crash | stable | **Not reproduced**: 866×1 KiB filled, last freed, 200/200 cycles OK, full re-alloc OK (needs non-zero garbage above heap end) |
 | T-D7 | D-7 | **Static:** `m68k-elf-ar t libm.a` | lists printf.o, sdfat, vterm, … | math objects only | **FAIL (bug confirmed, static)**: libm.a has 313 members incl. printf.o, putchar.o, basicio.o, kinit.o, vterm.o, heap.o, sst.o |
 | T-D8 | D-8 | softfloat: `n=sprintf(b,"ab%f",1e10)` | n and b wrong | n = strlen(b) | **FAIL (bug confirmed)**: n=2, buf="cd"; "%lld|%d" → "|0"; "%e|%d" → "e|1073217536" |
-| T-D11 | D-11 | `readline(buf, 300)` and type 280 characters | buffer start overwritten | 299 characters stored | pending |
+| T-D11 | D-11 | `readline(buf, 300)` and type 280 characters | buffer start overwritten | 299 characters stored | **FAIL (bug confirmed)**: 280 chars into a 300-byte buffer → ret=24, buffer start overwritten, bytes 256+ untouched |
 | T-D4 | D-4 | `strtol("abc",&end)` and `strtol("\t42")` | end = s−1; tab not skipped | end = s; 42 | **Partly confirmed**: end−in = 0 (correct), but "\t42" → 0 (tab not skipped) |
 | T-D6 | D-6 | `calloc(0x10000,0x10001)` | non-NULL (overflowed size) | NULL | **FAIL (bug confirmed)**: returned $0000B09E |
 | T-D12 | D-12 | `vt_move_cursor_left(1)` | cursor moves right | moves left | **FAIL (bug confirmed)**: left emits ESC[3C, right emits ESC[3D |
-| T-D13 | D-13 | gdb to MAME; send characters while running, then break in | characters lost | delivered | pending |
+| T-D13 | D-13 | gdb to MAME; send characters while running, then break in | characters lost | delivered | **Not testable here**: host gdb has no m68k target |
 
 ## UI rules (carried over; only applies if a GUI/TUI is built)
 | ID | Spec ref | Description | Expected result | Status |

@@ -82,3 +82,13 @@
   - **Partly confirmed:** E-3 (masked: byte @1 = $10), B-4 (benign: "Ignoring unrecognised SD card"), D-4 (tab only).
   - **Not reproduced:** D-5.
   - **Not testable:** X-* and V-3 (MAME has no Xosera/V9958 model), B-2 (no host kermit).
+
+## 9. Pending tests, then R-3
+**User:** "run the 7 pending tests, then R-3" (no corrections needed).
+- **Pending tests:**
+  - **Confirmed:** A-2 (ROM `__divsi3`: −7/2=$7FFFFFFC), B-17 (0-byte BIN → crash), D-11 (readline wraps at 256), D-1 (garbage prompt).
+  - **Not reproduced:** A-9 is latent (zipped stage2 only $3320 bytes).
+  - **Not testable:** D-13 (no m68k gdb on the host).
+- **New B-19:** IDE boot never works on the v2.42 release, because `ROSCO_M68K_ATA` reaches gcc but not vasm, so the ATA EFP entry points are stubs. Fixed on develop (d375bc2).
+  - **Proof:** a test-only build with the define added to vasm boots from IDE.
+  - **B-8:** confirmed on that build. A partition at LBA 2^28+2048 loads the decoy kernel at LBA 2048.

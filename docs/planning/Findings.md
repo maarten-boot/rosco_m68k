@@ -12,7 +12,12 @@ _Target: r2.x board (68010), 1M HUGEROM, default build options. The ROM kernel, 
   - B-4: init wrongly reports OK, but stage2 ignores the card and does not crash.
   - D-4: tab whitespace is not skipped, but `endptr` is correct for "abc".
 - **M8b, not reproduced:** D-5 (heap free of the last block). It stays open at low confidence.
-- **Not testable in this MAME build:** X-* (no Xosera), V-3 (no V9958), B-2 (no host Kermit), B-6 (slow SD cards). 22 findings are confirmed in total.
+- **Not testable in this MAME build:** X-* (no Xosera), V-3 (no V9958), B-2 (no host Kermit), B-6 (slow SD cards).
+- **Pending-test round (2026-10-30), confirmed:** A-2, B-8 (on an ATA-enabled test build), B-17, D-1, D-11.
+- **Pending-test round, not reproduced:** A-9 is latent (needs a compressed stage2 of 64 KiB or more).
+- **Pending-test round, not testable:** D-13 (no m68k gdb on the host).
+- **NEW B-19 (found during M8, confirmed):** in the v2.42 release build, `ROSCO_M68K_ATA` is passed only to the C compiler (`EXTRA_CFLAGS` in `blockdev/include.mk`), never to vasm. So `blockdev/syscalls_asm.asm` assembles FW_ATA_INIT/READ/WRITE/IDENT as stubs (`moveq #1,d0` / `moveq #0,d0`). **IDE boot can never work, and TRAP 13 ATA calls always fail**, although the boot banner lists the drive. Fixed on develop by d375bc2 (`DEFINES+=-DROSCO_M68K_ATA`).
+- **Totals:** 28 confirmed. Partly confirmed: E-3, B-4, D-4. Not reproduced: D-5, A-9. Not testable here: X-*, V-3, B-2, B-6, D-13.
 - **B-1 is worse than reported:** the crash triggers warm boot, which reloads the same file, so the board is stuck in a **crash/reboot loop** until the SD card is removed.
 - **A-3 refined:** the copy source `_code_end` points at the CODE section (ATA routine), not at the .data load address. In this build the only initialised .data variable is `ata.c:selected_drive`, which gets $20 instead of $FF. That is harmless today (the first drive select still happens) but latent.
 - **K-3 timing:** the magic is overwritten at about 3.65 s of emulated boot, when the kernel initialises. Boot is slow mainly because of the IDE probe timeouts (B-10).
@@ -56,8 +61,8 @@ Duplicates merged below: A-2 = B-14 (signed division); K-3 = part of D-18 (KERNE
 | 10 | E-2 ★ | EASy68K prints nothing for 0 (tasks 3, 17, 20) | no |
 | 11 | E-3 ✔ (symptom masked) | EASy68K task 16 can never turn prompt/LF back on | no |
 | 12 | A-1 ✔★ | TRAP 14 DEVICE_CTRL always writes $40 to the baud register (uses D1 = 64, not D2) | no |
-| 13 | A-2/B-14 | `__divsi3`/`__modsi3` are unsigned, so signed division is wrong for negative operands | no |
-| 14 | D-1 ✔ | libs `e68PrintStrReadNumSigned` passes the string pointer in D1, but A1 is required | no |
+| 13 | A-2 ★/B-14 | `__divsi3`/`__modsi3` are unsigned, so signed division is wrong for negative operands | no |
+| 14 | D-1 ✔★ | libs `e68PrintStrReadNumSigned` passes the string pointer in D1, but A1 is required | no |
 | 15 | D-5 (not reproduced) | shmall: freeing the last heap block reads past the heap end → heap corruption | no |
 | 16 | D-8 ★ | printf: `%f` > 1e9 resets the output index; `%lld` and `%e/%g` misalign arguments | no |
 | 17 | D-2 ★ | libs `memcpy` returns the end pointer | no |
@@ -66,9 +71,10 @@ Duplicates merged below: A-2 = B-14 (signed division); K-3 = part of D-18 (KERNE
 ### P3 — storage and loaders (data integrity)
 | # | ID | Finding | Dev |
 |---|----|---------|-----|
+| 18a | **B-19** ★ (new) | **IDE boot and TRAP 13 ATA calls are dead in the v2.42 release build**: the asm EFP entry points are built as stubs because the ATA define never reaches vasm | yes (d375bc2) |
 | 19 | B-4 ✔ (partly ★, benign) | SD init reports OK when CMD58 fails, with an uninitialised card struct | no |
 | 20 | B-5 / B-9 | SD and ATA writes don't check the result; no ATA cache flush | no |
-| 21 | B-8 | ATA is LBA28 only: >128 GiB addresses wrap and **write to the wrong sector** | no |
+| 21 | B-8 ★ | ATA is LBA28 only: >128 GiB addresses wrap and **write to the wrong sector** | no |
 | 22 | B-1 ✔★ / B-2 | BIN loader and Kermit receive have no RAM bound (can overwrite stage2, stack and SDB) | no |
 | 23 | B-6 | SD timeouts are probably shorter than the spec (slow cards fail) | no |
 | 24 | D-17 | sst_flash: no wait timeout, no verify (risk while updating flash) | no |
