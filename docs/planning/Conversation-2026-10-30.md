@@ -96,3 +96,12 @@
   - **Main session checked:** the TRAP15 A0 clobber (E-8) and the task-7 r2.x stub (E-5) in source.
   - **New findings:** E-8, B-20, B-21, E-9, D-19, D-20, A-22.
   - Spec R-3 marked met; all of R-1…R-8 are now addressed.
+
+## 10. M9 — fix strategy
+**User:** "yes, start M9" (no corrections needed).
+- Checked develop: the ROM kernel is off by default there (`WITH_KERNEL?=false`). So K-* is avoided by configuration, not fixed. The same mitigation is `NO_KERNEL=true` on v2.42.
+- Wrote FixStrategy.md:
+  - **Options:** A (upgrade), B (maint/2.42), C (maint plus develop ports, recommended).
+  - **Batches:** batch 0 is build flags only, batch 1 is backports, batch 2 is small new fixes, batch 3 is larger work; plus doc-only and defer lists.
+  - **User decisions D1–D4:** strategy, fitted hardware, ROM kernel use, upstreaming.
+- Added Spec R-9 and Plan M10.
