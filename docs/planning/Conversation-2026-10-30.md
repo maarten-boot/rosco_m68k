@@ -68,3 +68,8 @@
 - **M8:** the MAME build `rosco` has rosco_m68k_000/010/020/030. Confirmed at runtime: K-3, K-2, A-1, A-12, E-1, E-2, E-4, B-7, B-1. B-1 causes a crash/reboot loop.
 - **Correction:** debug_stub *is* in the default build (`WITH_DEBUG_STUB?=true`). The M3c note and A-19 were updated.
 - Test sources and MAME scripts saved in `docs/planning/tests/`.
+
+## 7. Commit request
+**User:** "commit the first round"
+**Claude:** everything was already committed (5 commits on `planning/session-docs`, working tree clean, branch not pushed). Asked whether "commit" means push, squash into one commit, tag, or open a PR.
+**User:** "tag it , i can push you can't" — decision: annotated tag `review-round-1`. The user pushes; Claude does not push.
