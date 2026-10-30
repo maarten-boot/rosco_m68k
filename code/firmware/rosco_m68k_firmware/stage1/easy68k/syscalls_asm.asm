@@ -323,19 +323,19 @@ SET_DISPLAY_OPTS:
     bra.s   EPILOGUE2
 
 .PROMPT_OFF:
-    move.b  0,PROMPT_ON
+    move.b  #0,PROMPT_ON
     bra.s   EPILOGUE2
 
 .PROMPT_ON
-    move.b  1,PROMPT_ON
+    move.b  #1,PROMPT_ON
     bra.s   EPILOGUE2
 
 .LF_OFF:
-    move.b  0,LF_DISPLAY
+    move.b  #0,LF_DISPLAY
     bra.s   EPILOGUE2
 
 .LF_ON:
-    move.b  1,LF_DISPLAY
+    move.b  #1,LF_DISPLAY
     bra.s   EPILOGUE2
 
 
