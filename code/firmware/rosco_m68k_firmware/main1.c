@@ -67,7 +67,7 @@ extern void PRINT_BANNER(void);
 typedef void (*Stage2)(void);
 
 // Linker defines
-extern uint16_t _data_start, _data_end, _code_end, _bss_start, _bss_end;
+extern uint16_t _data_start, _data_end, _data_load_start, _bss_start, _bss_end;
 extern uint32_t _zip_start, _zip_end;
 
 static volatile SystemDataBlock * const sdb = (volatile SystemDataBlock *)0x400;
@@ -85,7 +85,7 @@ noreturn void main1();
 
 noreturn void linit() {
   // copy .data
-  for (uint16_t *dst = &_data_start, *src = &_code_end; dst < &_data_end; *dst = *src, dst++, src++);
+  for (uint16_t *dst = &_data_start, *src = &_data_load_start; dst < &_data_end; *dst = *src, dst++, src++);
 
   // zero .bss
   for (uint16_t *dst = &_bss_start; dst < &_bss_end; *dst = 0, dst++);

@@ -37,6 +37,7 @@ SECTIONS
   {
     *(.early_data*)
     _data_start = .;
+    _data_load_start = _data_start - ADDR(.data) + LOADADDR(.data);
     . = ALIGN(2);
     *(.data*)
     _data_end = .;
