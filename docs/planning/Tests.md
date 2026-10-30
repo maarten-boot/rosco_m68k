@@ -137,3 +137,13 @@ Build: all 30 `fix/*` branches merged into a temporary integration branch withou
 | updateflash end-to-end (v2.42 → 2.42.1 from SD, `tests/flash/updateflash_harness.py`) | first attempt: flash written correctly (0/40262 bytes differ) but the reboot hung (DUART not reset by the RESET instruction). After wiring RESET → DUART: **PASS**: reboots straight into "Classic 2.42.1"; cold restart with `-bios v242` still boots 2.42.1 from flash |
 | D-17 timeout with real flash model | normal programming never hits the cap (sector erase 125 ms) |
 | Intermediate commit 23a2ae3 builds; head builds; scripts use fresh NVRAM (`rosco-test.sh -e 'Classic 2.42.1'` with the maint ROM PASS) | **PASS** |
+
+## D-17 option 3: interrupt masking + verify (maint fa01377, 2026-10-30, flash-ROM model incl. intelfsh "program only clears bits" fix aa2de25)
+| Test (`tests/flash/sst_verify_irq_test.c`) | timeout-only lib | with option 3 |
+|------|------------------|---------------|
+| V1: write $FF over $00 without erase | returns success, cell stays $00 ✗ | returns failure ✔ |
+| V2: erase + program 2 KiB per chip with interrupts left enabled by the caller | crash: "Illegal instruction" in the tick IRQ (SR=$2400) ✗ | ok, 0 mismatches ✔ |
+| Sector-127 program + persistence (`flash_program_test.c`) | PASS | PASS |
+| updateflash 2.42 → 2.42.1, then cold restart | PASS | PASS |
+| Erase-verify failure path | — | not testable (the model can't make an erased cell non-$FF) |
+| develop: fix/D-17 libs build | — | PASS |

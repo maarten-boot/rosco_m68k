@@ -8,7 +8,7 @@ _2026-10-30. No fixes have been made yet._
 | D1 | **Option C:** branch `maint/2.42` (from tag v2.42) for the board; each new fix is also ported to `fix/<ID>` off `develop` |
 | D2 | **No extra hardware** (no V9958, Xosera, IDE or keyboard); 4 MB RAM upgrade (5 MB total, assumed). V-*, X-*, B-8/B-9 and c8ec0ba are deferred for maint; they are still reported upstream |
 | D3 | **CPU MC68010; build with `NO_KERNEL=true`.** Only `software/kernel_test` uses the ROM kernel API, so K-* is deferred |
-| D4b | **D-17: option 2 (timeout only)**, done 2026-10-30 |
+| D4b | **D-17: option 2 (timeout only)** done, then **option 3 (interrupt masking + verify)** done 2026-10-30 after M12 made it testable |
 | D4 | **Upstream: draft issue texts** (one per confirmed finding, with repro). The user files them; no PR branches are pushed by Claude |
 | Use case | Standalone board running Kermit-loaded or SD-loaded (ROSCODE1.BIN) programs. **Later minix2 will use the ROM SD/bit-banged-SPI code (TRAP 13)**, so B-4, B-5, B-6, B-7, B-12 and B-20 move up |
 

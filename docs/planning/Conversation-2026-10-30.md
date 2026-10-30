@@ -196,3 +196,11 @@
 - **updateflash end-to-end:** the flash was written correctly, but the reboot hung (no DUART reset on the RESET instruction). Wired the CPU reset_cb to the DUART; the update now reboots into 2.42.1, and a cold restart keeps it.
 - **Usability:** test scripts get a fresh -nvram_directory. Removed an nvram/ dir that my own pre-fix smoke run had created in the emulator repo (git-ignored).
 - **Emulator commits:** 55c081e, 23a2ae3 (builds on its own), bdcfddc, dab1d6b (README). Not pushed.
+
+## 18. D-17 option 3 (verify)
+**User:** "now do the D-17 verify step (option 3)" (no corrections needed). Scope: on top of the timeout, mask interrupts inside sst_flash and verify writes and erases by reading back. Testable now with the M12 flash model.
+- **Emulator aa2de25:** intelfsh SST byte program now ANDs, i.e. it can only clear bits, as real NOR flash does. This makes verify failures testable.
+- **Baseline with the timeout-only lib:** writing $FF over $00 reported success; erase/program with IRQs enabled crashed ("Illegal instruction", tick IRQ).
+- **maint fa01377 (option 3):** IPL-7 masking per sequence with the caller's mask restored; write read-back verify; sector-erase 0xFF verify. Chip erase is masked but not verified; sst_command is left raw.
+- **After the fix:** V1 fails correctly; V2 ok with 0 mismatches; the program/persist test and the updateflash end-to-end update pass. Ported to fix/D-17 (2nd commit), and the develop libs build.
+- **Issue #18 regenerated** with the new scope.

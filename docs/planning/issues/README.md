@@ -23,7 +23,7 @@ Only findings still present on `develop` @ ec229f9 are included. Already fixed o
 | 15 | D-7 | [libs: libm.a contains every library's objects (incl. the float printf)](15-D-7.md) | Confirmed | `fix/D-7` |
 | 16 | D-1, D-12 | [libs wrappers: e68PrintStrReadNumSigned passes the prompt in D1; vterm cursor left/right swapped](16-D-1.md) | Both confirmed in MAME | `fix/D-1, fix/D-12` |
 | 17 | D-13, D-14 | [libs gdb stub: ring-buffer mask never set; DUART status read from absolute addresses](17-D-13.md) | By reading | `fix/D-13, fix/D-14` |
-| 18 | D-17 | [libs sst_flash: toggle-bit wait has no timeout (updateflash can hang with interrupts masked)](18-D-17.md) | Timeout path tested in MAME | `fix/D-17` |
+| 18 | D-17 | [libs sst_flash: no timeout, no interrupt masking and no verify (updateflash can hang or write a bad ROM)](18-D-17.md) | Confirmed in MAME | `fix/D-17 (2 commits)` |
 | 19 | K-1, K-2, K-3, K-4 | [ROM kernel (WITH_KERNEL=true): task exit corrupts vector $10, irq_remove leaves IRQs masked, API pointer overwrites SDB magic, warm boot self-chains IRQs](19-K-1.md) | All four confirmed in MAME on v2.42 | `—` |
 | 20 | V-1, V-3, X-1, X-2, X-3 | [Video consoles: V9958 CLRSCR writes through the caller's A0; Xosera ANSI erase/NEL bugs](20-V-1.md) | V-1 confirmed | `—` |
 | 21 | U-1 | [develop: `make MAME=true` fails with -Werror=unused-label in stage2/main2.c](21-U-1.md) | Confirmed | `—` |

@@ -121,11 +121,14 @@ dict(n=17, ids='D-13, D-14', title='libs gdb stub: ring-buffer mask never set; D
  body="""- **D-13** `uart_b.mask` stays 0 (bss), so `duart_buffer_char` always writes `data[0]`: input received while the target runs is lost.
 - **D-14** `move.b DUART_SRA,D0` reads absolute address $2 (a reset-vector byte) instead of `DUART_SRA(A0)`; same for SRB. Also noted, not changed: the shared `.error` path resets UART A's overrun even for UART B.""",
  repro="—", fix="Set `mask = sizeof(data) - 1`; use `(A0)`-relative reads.", branch='fix/D-13, fix/D-14'),
-dict(n=18, ids='D-17', title='libs sst_flash: toggle-bit wait has no timeout (updateflash can hang with interrupts masked)',
- status='Timeout path tested in MAME with RAM standing in for the flash and DQ6 forced to toggle; real flashing untested (MAME maps the ROM read-only).',
- where=[LB+'sst_flash/sst.c:31'],
- body="""`wait()` polls DQ6 until it stops toggling with no limit, so a missing/protected/failing chip hangs updateflash forever. Proposed fix is deliberately minimal (no verify step, no extra interrupt masking) because it cannot be tested without flash emulation.""",
- repro="`tests/sst_timeout_test.c` + `mame/sst_stuck.dbg`.", fix="Bound the wait (1,000,000 polls ≈ 5 s at 10 MHz) and return false; updateflash already checks the result.", branch='fix/D-17'),
+dict(n=18, ids='D-17', title='libs sst_flash: no timeout, no interrupt masking and no verify (updateflash can hang or write a bad ROM)',
+ status='Confirmed in MAME with the flash-ROM model (rosco-emulator branch feature/sst-flash): programming 0xFF over 0x00 reported success; erase/program with interrupts enabled crashed ("Illegal instruction" from the tick handler). Fixed versions pass, incl. a full updateflash 2.42 -> 2.42.1.',
+ where=[LB+'sst_flash/sst.c:31 (wait)', LB+'sst_flash/sst.c (sst_sector_erase, sst_write_byte, sst_get_device_info)'],
+ body="""- `wait()` polls DQ6 with no limit, so a missing/protected/failing chip hangs the caller forever (with interrupts masked, in updateflash).
+- Nothing masks interrupts inside the library, although the vectors and handlers live in the ROM being programmed: while the chip is busy it returns status bits, so an interrupt executes garbage. updateflash masks itself, other callers may not.
+- No verification: a byte that does not program (e.g. its sector was not erased – flash can only clear bits) or a sector that does not erase is reported as success, so a bad ROM image can be written without any error.""",
+ repro="`tests/flash/sst_verify_irq_test.c` and `tests/flash/updateflash_harness.py` on the flash-ROM emulator; `tests/sst_timeout_test.c` + `mame/sst_stuck.dbg` for the timeout.",
+ fix="Bound the wait (1,000,000 polls ≈ 5 s at 10 MHz); run each command sequence at IPL 7 and restore the caller's mask; read back each programmed byte and check erased sectors are all 0xFF. sst_chip_erase is masked but not verified (device-size dependent).", branch='fix/D-17 (2 commits)'),
 dict(n=19, ids='K-1, K-2, K-3, K-4', affects='release v2.42 (ROM kernel built by default) and `develop` @ ec229f9 when built with `WITH_KERNEL=true`', title='ROM kernel (WITH_KERNEL=true): task exit corrupts vector $10, irq_remove leaves IRQs masked, API pointer overwrites SDB magic, warm boot self-chains IRQs',
  status='All four confirmed in MAME on v2.42 (where the kernel is built by default). develop builds without the kernel by default but the code is unchanged. No fix branch.',
  where=[FW+'kernel/sched.c:74', FW+'kernel/kmachine.asm:296', FW+'kernel/include/kernelapi.h:27', FW+'kernel/kmachine.asm:123'],
