@@ -257,7 +257,7 @@ CHECK_RECV:
 
 * ************************************************************************** *
 GET_TICKS:
-    move.w  $408,D1                     ; Get (Word-sized!) count from SDB
+    move.l  SDB_UPTICKS,D1              ; 100Hz uptime tick count (long) from SDB
     bra.w   EPILOGUE2                   
 
 
