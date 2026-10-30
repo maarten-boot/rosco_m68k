@@ -16,8 +16,8 @@
 #ifndef _ROSCOM68K_PRINTF_CONFIG_H
 #define _ROSCOM68K_PRINTF_CONFIG_H
 
-#define PRINTF_DISABLE_SUPPORT_EXPONENTIAL
-#define PRINTF_DISABLE_SUPPORT_LONG_LONG
+// #define PRINTF_DISABLE_SUPPORT_EXPONENTIAL   (enabled since 2.42.1: see D-8)
+// #define PRINTF_DISABLE_SUPPORT_LONG_LONG   (enabled since 2.42.1: see D-8)
 #define PRINTF_DISABLE_SUPPORT_PTRDIFF_T
 
 extern void (*putchar_func)(char chr, void* arg);
