@@ -273,3 +273,9 @@
 
 ## 31. Tag round 6
 **User:** "pushed, tag it as review-round-6" (no corrections needed). A lightweight tag review-round-6 already existed on 3ebb4d5 (made by the user, as in round 5). Following the round-5 decision, Claude replaced it with an annotated tag on this log commit.
+
+## 32. Crosscheck after round 6
+**User:** "pushed, now crosscheck spec, plan and code" (no corrections needed).
+- **rosco_m68k:** code unchanged; all branches equal origin; review-round-1…6 annotated.
+- **Emulator (read-only, inspected only):** feature/sst-flash is now pushed (origin = cec16b598fa), untagged after review-round-2.
+- **Doc fixes:** Findings EMU-4…6 note and Plan M12 updated to "pushed"; Spec R-8 ("0 pending") and R-12 now mention the 3 pending T-EMU tests. Plan crosscheck row (17) added.
