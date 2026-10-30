@@ -1,4 +1,5 @@
-SOURCES=$(shell find . -name "*.c")
+# Only this library's own sources (find . ran from libs/ and swept every lib in)
+SOURCES:=$(shell find $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST)))) -name "*.c")
 LIBOBJECTS=$(SOURCES:%.c=%.o)
 LIB=m
 LIBINCLUDES=$(DIR)/include
