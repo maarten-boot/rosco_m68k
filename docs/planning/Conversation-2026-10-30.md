@@ -229,3 +229,8 @@
   - UI rules marked N/A.
   - Plan M8/M10 statuses updated.
   - Stale "41 commits/4540743" and the rewritten hash bc00173 corrected.
+
+## 22. Tag round 3
+**User:** "pushed, tag it as review-round-3" (no corrections needed).
+- **First attempt:** failed; /tmp (tmpfs) was full. Claude asked before deleting anything. The user freed space (now 23% used) and repeated the request.
+- **Result:** annotated tag on planning/session-docs, as for rounds 1 and 2.
