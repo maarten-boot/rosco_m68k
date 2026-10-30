@@ -2,7 +2,7 @@
 
 _Source: review agent, 2026-10-30; static reading only. Paths relative to `code/firmware/rosco_m68k_firmware/`._
 _✔ = spot-checked by the main session against the v2.42 source._
-_Build note (main session): the default v2.42 build includes the ROM kernel (unless NO_KERNEL=true), V9958 (unless WITH_VDP=false) and Xosera ANSI (unless XOSERA_ANSI_CON=false). The firmware debug_stub is only included with WITH_DEBUG_STUB=true._
+_Build note (main session): the default v2.42 build includes the ROM kernel (unless NO_KERNEL=true), V9958 (unless WITH_VDP=false) and Xosera ANSI (unless XOSERA_ANSI_CON=false). **Correction (M7, 2026-10-30): the firmware debug_stub is also in the default build (`WITH_DEBUG_STUB?=true`).**_
 _Debug-stub IDs renamed S-x (agent used D-x, which clashes with M3d)._
 
 ## Kernel
