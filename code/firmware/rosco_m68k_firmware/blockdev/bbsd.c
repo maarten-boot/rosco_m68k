@@ -312,8 +312,17 @@ bool BBSD_write_block(BBSDCard *sd, uint32_t block, uint8_t *buffer) {
     BBSPI_send_byte(0xFF);
     BBSPI_send_byte(0xFF);
 
-    // Wait for card to be done...
-    if (!wait_for_card(BBSD_WRITE_WAIT_RETRIES)) {
+    // The card answers with a data response token xxx0sss1 within a few
+    // bytes; sss = 010 means accepted, 101 CRC error, 110 write error.
+    uint8_t token = 0xFF;
+    for (int i = 0; i < BBSD_DATA_RESPONSE_RETRIES && token == 0xFF; i++) {
+        token = BBSPI_recv_byte();
+    }
+
+    if ((token & DATA_RESPONSE_MASK) != WRITE_RESPONSE_OK) {
+        result = false;
+    } else if (!wait_for_card(BBSD_WRITE_WAIT_RETRIES)) {
+        // Accepted, but the card stayed busy (MISO low) too long
         result = false;
     } else {
         result = true;
