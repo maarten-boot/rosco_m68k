@@ -265,3 +265,8 @@
 **User:** "leave the emulator repo for the moment , treat it as read only".
 - No changes, builds or test runs in ../rosco-emulator until the user says otherwise.
 - The planning docs keep describing the tagged state (review-round-2 = aa2de25). Plan M12 and Findings EMU-3 stay as they are; the 3 newer commits are recorded only in Plan crosscheck row 15.
+
+## 30. Emulator review findings
+**User:** pasted 3 issues found on the rosco-emulator side after our M12 changes (README `-bios` statement wrong; blank flash refilled at every reset; intelfsh SST changes not limited to the 39SF parts). No corrections needed.
+- **Mapping:** each issue matches one of the 3 unpushed commits on feature/sst-flash: cec16b598fa (README), 7b135b0c754 (flash_even/flash_odd regions, seed only without NVRAM), 061407363b6 (device IDs 0xB5–0xB7). Checked from the diff only; the emulator repo stays read-only.
+- **Docs:** Findings EMU-4…6 added; EMU-3 corrected (our own text repeated the `-bios` error); Plan row 11 annotated, row 16 added; Tests T-EMU4…6 added as pending.

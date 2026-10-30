@@ -138,6 +138,14 @@ Build: all 30 `fix/*` branches merged into a temporary integration branch withou
 | D-17 timeout with real flash model | normal programming never hits the cap (sector erase 125 ms) |
 | Intermediate commit 23a2ae3 builds; head builds; scripts use fresh NVRAM (`rosco-test.sh -e 'Classic 2.42.1'` with the maint ROM PASS) | **PASS** |
 
+Re-verification of the emulator review fixes (EMU-4…6, commits aa2de25..cec16b598fa). **Pending**: the emulator repo is read-only for now. The commit messages report PASS for T-EMU5, T-EMU4 and the chip-ID part of T-EMU6, but this session has not run them.
+
+| Test | Spec | Steps | Expect | Result |
+|------|------|-------|--------|--------|
+| T-EMU4 | R-12 | Boot `rosco_m68k_010` (v250), then `-bios v242`, with the same `-nvram_directory` | each boots its own firmware; NVRAM in `rosco_m68k_010/` and `rosco_m68k_010_1/` | pending |
+| T-EMU5 | R-12 | Chip-erase both chips from software, exit MAME (NVRAM saved), start again with the same NVRAM dir | no banner (board "bricked"); a fresh `-nvram_directory` boots | pending |
+| T-EMU6 | R-12 | Re-run `flash_program_test.c` and `updateflash_harness.py` on cec16b598fa | IDs BF/B7; pattern PASS; updateflash 2.42 → 2.42.1 PASS (the 39SF-only check still covers the board's chip, ID 0xB7) | pending |
+
 ## D-17 option 3: interrupt masking + verify (maint fa01377, 2026-10-30, flash-ROM model incl. intelfsh "program only clears bits" fix aa2de25)
 | Test (`tests/flash/sst_verify_irq_test.c`) | timeout-only lib | with option 3 |
 |------|------------------|---------------|
