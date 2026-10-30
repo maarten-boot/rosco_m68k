@@ -101,3 +101,13 @@ Note: the earlier test programs that call fixed ROM addresses (`t_div`, `t_misc`
 | T-D5 | heap free last block | still not reproduced (OK) |
 | B-2, B-3, D-13, D-14 | Kermit bound, ELF filesz, gdb mask/SR | built; not runtime-tested (no host kermit/gdb; malformed ELF not built) |
 | Regression | boot 000/010/020, 5 MB RAM, SD boot, IDE boot, SDB magic | **PASS** |
+
+### Version bump + batch 3 (2026-10-30, ROM SHA1 f2d1344d…, maint/2.42 @ bc00173, 40 commits)
+| Test | Fix | Result |
+|------|-----|--------|
+| Banner | 2.42.1 | **PASS**: "Classic 2.42.1"; version word unchanged at $60000242 (user decision: banner only) |
+| T-B5 (new) | SD write data-response token | **PASS**: TRAP 13 init/write/read-back of block 50 OK, 0 mismatches, data reaches the image. With a write-error token ($0D) injected at $E02340, write returns 0 (was: success) — `t_sdw.asm`, `mame/sdw_bad.dbg` |
+| T-B6 (new) | time-based SD timeouts | **PASS**: normal write 2 ticks; card held busy forever (inject d0=0 at $E02362) → write fails after 54 ticks ≈ 540 ms (500 ms limit) — `t_sdw_t.asm`, `mame/sdt_busy.dbg`. No-card boot still reaches Kermit in 3.5–4 s, same as v2.42 |
+| T-D8 | printf %e/%g/long long, _ftoa/_etoa | **PASS**: "%lld\|%d" → 7\|99; "%e\|%d" → 1.500000e+00\|99; %f(1e10) → 1.000000e+10 with n = strlen; %e of 1e10, 1e-5, 123456.789, 9.99999e7, 1.0, 0.0 all correct (0.0 was e-308) |
+| T-D3 (new) | memmove/memcmp | **PASS**: overlapping memmove both directions; memcmp sign correct. All 18 example programs build |
+| D-17 | sst_flash | **not changed**: MAME maps the ROM read-only (no SST command model), so flash code cannot be tested; held for a user decision |

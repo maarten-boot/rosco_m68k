@@ -1,0 +1,5 @@
+bpset 0xe02340,1,{d0=0x0d; go}
+gtime #8000
+load $TESTS/t_sdw.bin,0x40000
+pc=0x40000
+go

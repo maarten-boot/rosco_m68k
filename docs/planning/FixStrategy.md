@@ -84,7 +84,7 @@ D3 decided: NO_KERNEL=true on a 68010. D2 (fitted hardware) is still open.
 | D-7 | libm `include.mk`: `find src/libm …` instead of `find .`; fix the `filter-out` pattern | S | T-D7 |
 | D-13/D-14 | gdb: initialise the ring-buffer mask; `(A0)`-relative SRA/SRB; IMR | S | needs m68k gdb |
 
-### Batch 3 — larger or design changes
+### Batch 3 — larger or design changes — **2026-10-30: B-5, B-6, D-8, D-3 done on maint/2.42.** D-17 is held (not testable in MAME; brick risk). B-8/B-9/K-* are deferred (no IDE; kernel off). B-16 is feature work
 | ID | Fix | Effort | Note |
 |----|-----|--------|------|
 | B-8 | either reject LBA ≥ 2^28, or implement LBA48 (READ/WRITE EXT) using IDENTIFY words 83/100-103 | M | rejecting is the S-size safe interim fix |

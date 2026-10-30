@@ -143,3 +143,15 @@
   - **Mistake caught:** a vterm edit slip produced `"C","D"`; it was caught in the diff and amended.
 - **Regression (ROM 0915260b…):** all targeted tests PASS; D-8 still fails (batch 3). 5 MB RAM is OK.
 - **Open questions for the user:** whether to bump the firmware version string to 2.42.1; whether to make the develop ports now.
+
+## 13. Version bump, batch 3
+**User:** "yes bump to 2.42.1, then start batch 3" (no corrections needed).
+- **Version encoding:** asked the user; answer: "Banner only". The banner reads 2.42.1 and the version word stays $60000242 (commit 037d670).
+- **Mistake caught:** a Python edit converted CRLF bootstrap.asm to LF (832-line diff). It was fixed with a byte-level edit and the commit amended. All changed files were checked for CRLF consistency afterwards.
+- **Batch 3 committed and tested:**
+  - B-5: SD write response token.
+  - B-6: time-based SD timeouts, with the forced-command short wait kept to avoid a no-card boot stall, and an asm launder to avoid a GCC -Warray-bounds error.
+  - D-8: printf %e/%g/long long plus _ftoa/_etoa fixes. Upstream _etoa bugs found during testing: 0.0 printed as e-308, and 1e10 printed as 10.0e+09.
+  - D-3: memmove/memcmp.
+- **D-17 (sst_flash) held:** it cannot be tested in MAME, and it carries brick risk. Asking the user.
+- maint/2.42 is now 40 commits on v2.42 (head bc00173).

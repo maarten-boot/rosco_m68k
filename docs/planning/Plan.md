@@ -18,7 +18,7 @@
 | M8b | Remaining runtime tests: kernel task exit (K-1), warm-boot IRQ chain (K-4), V9958/Xosera (check whether MAME models them), library tests | done 2026-10-30: 8 more confirmed, 3 partly, 1 not reproduced (D-5); MAME has no V9958/Xosera; no host Kermit |
 | R3 | Full InterfaceReference ↔ code conformance table | done 2026-10-30 → reviews/R3-interface-table.md (6 new findings) |
 | M9 | Decide per finding: fix on a v2.42 maintenance branch, fix on develop, or upstream an issue | done 2026-10-30 → FixStrategy.md (D1=C, D3=NO_KERNEL on 68010, D4=issue texts; D2 hardware open) |
-| M10 | Implement batches 0–3 on `maint/2.42` (+ `fix/<ID>` ports off develop), re-running the matching tests after each batch | batches 0–2 done 2026-10-30 (35 commits on maint/2.42; all targeted tests PASS except D-8, which is batch 3); next: batch 3 (minix2 SD write path first) and fix/<ID> develop ports |
+| M10 | Implement batches 0–3 on `maint/2.42` (+ `fix/<ID>` ports off develop), re-running the matching tests after each batch | batches 0–2 + batch 3 (B-5, B-6, D-8, D-3) + version 2.42.1 done 2026-10-30 (35 commits on maint/2.42; all targeted tests PASS except D-8, which is batch 3); next: batch 3 (minix2 SD write path first) and fix/<ID> develop ports |
 | M11 | Draft upstream issue texts (one per confirmed finding, with repro from tests/) in docs/planning/issues/ | proposed |
 
 ## Crosscheck log
@@ -31,3 +31,4 @@
 | 2026-10-30 (5) | R-3 is met: 117-row table; new findings E-8, B-20, B-21, E-9, D-19, D-20, A-22, and E-5 upgraded. All Spec requirements R-1…R-8 are now addressed. Open: M9 (fix strategy), plus untestable items (Xosera, V9958, Kermit, gdb, slow SD) that need hardware or tools. |
 | 2026-10-30 (6) | maint/2.42 batches 0+1: code ↔ FixStrategy ↔ Tests consistent; every changed area has a passing regression test. Open: debug_stub 020 runtime check; batch 2. |
 | 2026-10-30 (7) | Batch 2: code ↔ FixStrategy ↔ Tests consistent; 21 targeted tests PASS, 2 new tests (T-E5, T-E8). Not runtime-tested: B-2, B-3, D-13, D-14. Docs on maint mention "2.42.1"; the firmware version string is not bumped yet (user decision). |
+| 2026-10-30 (8) | Version 2.42.1 (banner only) + batch 3 partial: code ↔ FixStrategy ↔ Tests consistent; new tests T-B5, T-B6, T-D3. Held: D-17 (needs real hardware and a recovery path). Process note: a CRLF→LF rewrite of bootstrap.asm was caught and amended; all changed files were checked for line-ending consistency. |
