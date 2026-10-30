@@ -211,3 +211,6 @@
 **User:** "also tag the emulator branch" (no tag name given).
 - **Name chosen:** review-round-2, on feature/sst-flash (aa2de25), to match the planning tag.
 - **Why not v***: release.yml in rosco-emulator builds and publishes a release on `v*` tags.
+
+## 20. Push everything
+**User:** "give me one command to push everything in both repos" (no corrections needed). Claude gave one combined command (branches plus annotated tags in both repos); the user pushes.
