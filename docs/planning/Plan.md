@@ -17,8 +17,9 @@
 | M8 | Check MAME (`../rosco-emulator`) has the r2 driver; run the P1 tests | partly done 2026-10-30: driver `rosco_m68k_0x0` with `-bios v242`; 12 findings confirmed (tests/). Still open: K-1, K-4, V-1, V-3, X-1, E-3, E-6, B-2, B-4, D-x library tests |
 | M8b | Remaining runtime tests: kernel task exit (K-1), warm-boot IRQ chain (K-4), V9958/Xosera (check whether MAME models them), library tests | done 2026-10-30: 8 more confirmed, 3 partly, 1 not reproduced (D-5); MAME has no V9958/Xosera; no host Kermit |
 | R3 | Full InterfaceReference ↔ code conformance table | done 2026-10-30 → reviews/R3-interface-table.md (6 new findings) |
-| M9 | Decide per finding: fix on a v2.42 maintenance branch, fix on develop, or upstream an issue | draft 2026-10-30 → FixStrategy.md; waiting for user decisions D1–D4 |
-| M10 | Implement batches 0–3 per the chosen strategy, re-running the matching tests after each batch | blocked on M9 decisions |
+| M9 | Decide per finding: fix on a v2.42 maintenance branch, fix on develop, or upstream an issue | done 2026-10-30 → FixStrategy.md (D1=C, D3=NO_KERNEL on 68010, D4=issue texts; D2 hardware open) |
+| M10 | Implement batches 0–3 on `maint/2.42` (+ `fix/<ID>` ports off develop), re-running the matching tests after each batch | next |
+| M11 | Draft upstream issue texts (one per confirmed finding, with repro from tests/) in docs/planning/issues/ | proposed |
 
 ## Crosscheck log
 | Date | Spec ↔ Plan ↔ Code result |

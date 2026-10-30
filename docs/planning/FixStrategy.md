@@ -1,6 +1,23 @@
 # Fix strategy — rosco_m68k v2.42 findings (M9)
 
-_Draft 2026-10-30. Proposal only: no fixes have been made. The decisions marked **[D1]–[D4]** are the user's to make._
+_2026-10-30. No fixes have been made yet._
+
+## 0. Decisions (user, 2026-10-30)
+| # | Decision |
+|---|----------|
+| D1 | **Option C:** branch `maint/2.42` (from tag v2.42) for the board; each new fix is also ported to `fix/<ID>` off `develop` |
+| D2 | Hardware: **not yet answered**. Batches keep the V9958/Xosera/IDE/keyboard items, but their priority is open |
+| D3 | **CPU MC68010; build with `NO_KERNEL=true`.** Only `software/kernel_test` uses the ROM kernel API, so K-* is deferred |
+| D4 | **Upstream: draft issue texts** (one per confirmed finding, with repro). The user files them; no PR branches are pushed by Claude |
+| Use case | Standalone board running Kermit-loaded or SD-loaded (ROSCODE1.BIN) programs. **Later minix2 will use the ROM SD/bit-banged-SPI code (TRAP 13)**, so B-4, B-5, B-6, B-7, B-12 and B-20 move up |
+
+Consequences:
+- The 68000-only backport 44c9b5a is optional.
+- 1468b51 (CPU detection) still matters for correct 68010 reporting.
+- Kernel rows (K-*) move to "Defer"; T-K3 becomes the regression test showing the magic stays intact with NO_KERNEL=true.
+- **For minix2 (TRAP 13 SD path):**
+  - **Batch 2:** B-4 (CMD58 result), B-12 (SPI_INIT return convention, doc or code), B-20 (TRAP 13 A0 clobber: preserve A0 or document it).
+  - **Batch 3, promoted:** B-5 (SD write response token) and B-6 (time-based SD timeouts). Minix writes to the card, unlike the read-only stage2 loader.
 
 ## 1. Strategic options
 | Option | What | Pros | Cons |
@@ -9,7 +26,7 @@ _Draft 2026-10-30. Proposal only: no fixes have been made. The decisions marked 
 | B | v2.42 maintenance branch only (`maint/2.42` from tag `v2.42`, released as e.g. 2.42.1) | small, controlled changes on the firmware you run; every fix verifiable with the existing MAME tests | fixes don't reach develop; diverges further |
 | **C (recommended)** | **B for your board + each new fix also prepared for `develop`** | your board gets fixed now; the fixes are reusable upstream; the tests in `tests/` serve as regression tests on both lines | about twice the porting work (develop moved files to `stage1/`, and `common.c` changed) |
 
-**[D1] Choose A, B or C.**
+Chosen: **C** (D1).
 
 ## 2. Batches (proposed order for option B/C)
 Effort: S = under 1 h, M = a few hours, L = a day or more. "Verify" = test ID in Tests.md, re-run after the fix. A test that now FAILs must PASS afterwards.
@@ -21,7 +38,7 @@ Effort: S = under 1 h, M = a few hours, L = a day or more. "Verify" = test ID in
 | K-1…K-9 (incl. K-3 SDB magic) | Build with `NO_KERNEL=true`, as develop already does by default. Only if no program of yours uses the ROM kernel API at $400; the user libs ship no kernel lib (`-lkernel` is empty, D-18) | maint | S | T-K3 (magic intact), T-K4 |
 | V-*, X-* | If the hardware is not fitted, build with `WITH_VDP=false` / `XOSERA_ANSI_CON=false` (only reduces exposure; the code is inactive without the hardware anyway) | maint | S | — |
 
-**[D2] Which hardware is fitted: V9958? Xosera? IDE drive? PS/2 or rosco keyboard? CPU 68000 or 68010?** **[D3] Do you use the ROM kernel?**
+D3 decided: NO_KERNEL=true on a 68010. D2 (fitted hardware) is still open.
 
 ### Batch 1 — backports from develop (small and already reviewed upstream)
 | ID | Develop commit | Notes | Effort | Verify |
@@ -54,6 +71,8 @@ Effort: S = under 1 h, M = a few hours, L = a day or more. "Verify" = test ID in
 | B-17 | refuse a 0-byte kernel; check the `fl_attach_media` result | S | T-B17 |
 | B-1/B-2 | bound the BIN and Kermit loads to `STAGE2_LOAD` minus stack headroom (and the ELF p_filesz check, B-3) | M | T-B1, T-B2 |
 | B-4 | return an error when CMD58 fails | S | T-B4 |
+| B-20 | TRAP 13: preserve A0 in the dispatcher (or document that it is trashed) | S | new T-B20 |
+| B-12 | SPI_INIT: make it return 0 = OK as documented, or fix the doc (code change breaks existing callers that test for 1, so it needs checking) | S | new T-B12 |
 | V-1/V-3 | load the VDP base into A0 in CLRSCR; `moveq #0,D1` before `move.w CURPOS,D1` | S | T-V1 (V-3 needs hardware) |
 | X-1/X-2/X-3 | guard start==end; fix the inclusive ranges; rows vs cols | S | hardware only (no Xosera in MAME) |
 | D-1 | `move.l (12,A7),A1` | S | T-D1 |
@@ -69,8 +88,8 @@ Effort: S = under 1 h, M = a few hours, L = a day or more. "Verify" = test ID in
 | ID | Fix | Effort | Note |
 |----|-----|--------|------|
 | B-8 | either reject LBA ≥ 2^28, or implement LBA48 (READ/WRITE EXT) using IDENTIFY words 83/100-103 | M | rejecting is the S-size safe interim fix |
-| B-5/B-9 | check the SD data-response token; ATA: wait for BSY, check ERR/DF, CACHE FLUSH | M | write paths only (v2.42 stage2 is read-only, so it affects TRAP 13 users) |
-| B-6 | time-based SD timeouts using SDB_UPTICKS | M | needs a slow card on real hardware |
+| B-5/B-9 | check the SD data-response token; ATA: wait for BSY, check ERR/DF, CACHE FLUSH | M | **B-5 is high for minix2** (writes through TRAP 13) |
+| B-6 | time-based SD timeouts using SDB_UPTICKS | M | **high for minix2**; needs a slow card on real hardware |
 | D-8 | enable exponent / long long in `printf_config.h`; fix the `_ftoa` return | M | larger code size |
 | D-3 | add memmove/memcmp (+ strstr etc.) to cstdlib | M | |
 | D-17 | sst_flash: timeout, IRQ masking, verify | M | protects against bricking during updates |

@@ -105,3 +105,18 @@
   - **Batches:** batch 0 is build flags only, batch 1 is backports, batch 2 is small new fixes, batch 3 is larger work; plus doc-only and defer lists.
   - **User decisions D1–D4:** strategy, fitted hardware, ROM kernel use, upstreaming.
 - Added Spec R-9 and Plan M10.
+- **User answers (M9):**
+  - **D1:** option C (maint/2.42 plus develop ports).
+  - **D4:** draft issue texts.
+  - **D2 (hardware):** not answered.
+  - **D3/CPU:** "the standalone board with either a directly loaded app or the start app from disk loader uses the ROM kernel i presume, that is one usecase. Later the minix2 image will use part of the existing ROM code for sd card (bit banged SPI)".
+- **Proposed correction:** "usecase" → "use case".
+- **Uncertainty raised:** in v2.42 only `software/kernel_test` uses the ROM kernel API at $400. Normal programs, whether Kermit-loaded or ROSCODE1.BIN from SD, use start_serial plus TRAP 13/14/15, and `-lkernel` is empty. So the presumption is probably wrong. Asked the user to confirm.
+- **Noted:** minix2 will rely on the ROM SD/SPI path (TRAP 13). That raises B-4, B-5, B-6, B-7, B-12 and B-20 (A0 clobber) in priority.
+- **User confirmed:** NO_KERNEL=true; CPU MC68010.
+- **Hardware question (D2):** not answered a second time, so it is recorded as open; not asking again for now.
+- **FixStrategy.md updated:**
+  - Decision table added.
+  - The minix2 TRAP 13 SD path promotes B-4, B-5, B-6, B-12 and B-20.
+  - K-* deferred.
+- **Plan:** M9 done; M10 (implementation) next; M11 (issue texts) proposed.

@@ -23,7 +23,7 @@ _Status: agreed scope 2026-10-30._
 | R-6 | List the fixes on `develop` after v2.42 that affect an r2.x 1M board, so the user can decide whether to upgrade. | 2026-10-30 |
 | R-7 | For each finding, record the file:line at v2.42, the severity, the evidence, and whether `develop` already fixes it. | 2026-10-30 |
 | R-8 | Record findings that need runtime confirmation as MAME test cases in `Tests.md`. | 2026-10-30 |
-| R-9 | For each finding, propose a fix target (backport from develop / new fix / build flag / doc / defer) with effort and the test that verifies it. The user decides strategy, hardware scope, kernel use and upstreaming. | 2026-10-30 — draft in `FixStrategy.md` |
+| R-9 | For each finding, propose a fix target (backport from develop / new fix / build flag / doc / defer) with effort and the test that verifies it. The user decides strategy, hardware scope, kernel use and upstreaming. | 2026-10-30 — `FixStrategy.md`; decisions D1, D3, D4 taken |
 
 ## 3. UI colour and contrast (applies to any GUI/TUI component)
 - UI-1: The default theme uses a white background with black text.
