@@ -104,7 +104,7 @@ TICK_HANDLER::
 
 
 BUS_ERROR_HANDLER::
-    or.w    #0700,SR                  ; Disable exceptions
+    or.w    #$0700,SR                  ; Disable exceptions
 
     move.l  SDB_UARTBASE,A0
     move.b  #$00,DUART_IMR(A0)        ; Mask all interrupts
@@ -123,7 +123,7 @@ BUS_ERROR_HANDLER::
 
 
 ADDRESS_ERROR_HANDLER::
-    or.w    #0700,SR                  ; Disable exceptions
+    or.w    #$0700,SR                  ; Disable exceptions
 
     move.l  SDB_UARTBASE,A0
     move.b  #$00,DUART_IMR(A0)        ; Mask all interrupts
@@ -148,7 +148,7 @@ ADDRESS_ERROR_HANDLER::
 
 
 ILLEGAL_INSTRUCTION_HANDLER::
-    or.w    #0700,SR                  ; Disable exceptions
+    or.w    #$0700,SR                  ; Disable exceptions
 
     move.l  SDB_UARTBASE,A0
     move.b  #$00,DUART_IMR(A0)        ; Mask all interrupts
