@@ -204,3 +204,6 @@
 - **maint fa01377 (option 3):** IPL-7 masking per sequence with the caller's mask restored; write read-back verify; sector-erase 0xFF verify. Chip erase is masked but not verified; sst_command is left raw.
 - **After the fix:** V1 fails correctly; V2 ok with 0 mismatches; the program/persist test and the updateflash end-to-end update pass. Ported to fix/D-17 (2nd commit), and the develop libs build.
 - **Issue #18 regenerated** with the new scope.
+
+## 19. Tag round 2
+**User:** "tag it as review-round-2" (no corrections needed). "It" was read as the planning branch, the same as review-round-1 (annotated tag on planning/session-docs). The user pushes.
