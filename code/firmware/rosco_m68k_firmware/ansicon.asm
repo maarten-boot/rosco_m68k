@@ -23,6 +23,7 @@ ANSI_MOVEXY::
     eor.l   D0,D0                       ; Zero D0
 
     move.b  D2,D0                       ; Get Y from D1 into D0
+    addq.l  #1,D0                       ; 0-based row -> 1-based ANSI row
     move.l  #10,-(A7)                   ; Stack base (10)...
     move.l  D0,-(A7)                    ; ... and Y coord
     bsr.w   print_unsigned              ; ... and print
@@ -34,6 +35,7 @@ ANSI_MOVEXY::
 
     move.w  D2,D0                       ; Get coords into D0
     lsr.w   #8,D0                       ; Shift right to get X
+    addq.l  #1,D0                       ; 0-based col -> 1-based ANSI col
     move.l  D0,(A7)                     ; Replace Y on stack with X...
     bsr.w   print_unsigned              ; ... and print
 
