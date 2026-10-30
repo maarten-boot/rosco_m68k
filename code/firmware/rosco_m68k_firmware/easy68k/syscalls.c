@@ -26,17 +26,15 @@ static uint8_t buf[BUF_LEN];
 extern uint8_t digit(unsigned char digit);
 
 static unsigned char* print_signed_impl(int32_t value, unsigned char *bp) {
-  bool neg = false;
+  bool neg = value < 0;
+  // Work on the unsigned magnitude so INT32_MIN is printed correctly
+  uint32_t mag = neg ? -(uint32_t)value : (uint32_t)value;
 
-  if (value & 1 << 31) {
-    value = (~value) + 1;
-    neg = true;
-  }
-
-  while (value > 0) {
-    *bp-- = digit(value % 10);
-    value /= 10;
-  }
+  // do/while so that zero still produces a "0" digit
+  do {
+    *bp-- = digit(mag % 10);
+    mag /= 10;
+  } while (mag > 0);
 
   if (neg) {
     *bp-- = '-';
