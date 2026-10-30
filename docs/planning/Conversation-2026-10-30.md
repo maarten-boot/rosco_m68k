@@ -51,3 +51,13 @@
 - Updated Spec.md (R-1…R-8) and Plan.md (M1–M6).
 - Created a read-only v2.42 worktree in the scratchpad.
 - Started five parallel review agents (M3a–M3e).
+- M3e (develop diff) finished; summary saved to reviews/M3e-develop-diff.md.
+- M3b (stage2/blockdev) finished: 18 findings; B-1, B-4, B-7 spot-checked against source. Saved to reviews/M3b-stage2-blockdev.md.
+- M3a (core firmware) finished: 21 findings; A-1, A-3, A-4 spot-checked against source. Saved to reviews/M3a-core-firmware.md.
+- M3d (user libs) finished: 18 findings; D-1, D-7, D-13 spot-checked against source. Saved to reviews/M3d-libs.md.
+- M3c (kernel/EASy68K/video/debug_stub) finished: 34 findings; K-1, K-2, K-3, E-1, E-3 spot-checked. Firmware debug_stub IDs renamed S-x to avoid a clash with the libs' D-x.
+- Main session confirmed that the default v2.42 build includes the ROM kernel, V9958 and Xosera ANSI, so K/V/X findings apply to the user's ROM.
+- M4: consolidated into Findings.md (91 findings, about 88 unique, 14 verified, ranked P1–P5).
+- M5: Tests.md rewritten with 34 MAME/static test cases.
+- M6: first crosscheck recorded in Plan.md. Gaps: R-3 has no full API table; nothing has been built or run.
+- Proposed next milestones: M7 build for static checks, M8 run P1 tests in MAME, M9 decide where fixes go.

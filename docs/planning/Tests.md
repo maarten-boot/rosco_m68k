@@ -1,8 +1,54 @@
 # Test cases
 
+_Runtime checks for v2.42 findings (Spec R-8). Run in MAME (`../rosco-emulator`, rosco_classicv2 driver) unless noted. The quick emulator is not used for timing-sensitive tests._
+_Status: pending = not run yet. "Static" = can be verified from a build artefact (map, listing) without running._
+
+## Firmware findings
+| ID | Finding | Setup / steps | Expected if bug present | Pass criterion (fixed) | Status |
+|----|---------|---------------|-------------------------|------------------------|--------|
+| T-K3 | K-3 | Boot the default v2.42 1M build; in the MAME debugger read long @ $400 | value ≠ $B105D47A (kernel API pointer) | $B105D47A | pending |
+| T-K1 | K-1 | Kernel test program: start one task that returns; watchpoint on writes to $10–$13 | watchpoint fires from `suspend`; vector 4 = stack address | no write to $10 | pending |
+| T-K2 | K-2 | Program: register, then remove an IRQ handler; read SR and `disable_intr_count` | SR mask 7, count 1 | mask restored, count 0 | pending |
+| T-K4 | K-4 | Load a program, exit (warm boot), trigger a level 1–7 autovector IRQ | SP shrinks continuously / hang | handler runs once | pending |
+| T-B7 | B-7 | Boot from an SD image; watch DUART writes to OPCR (offset $1A) during reads | OPCR written $08; red LED stays on | no OPCR writes; LED off after read | pending |
+| T-A3 | A-3 | **Static:** link map / `objdump -h`: compare LOADADDR(.data) with `_code_end` and `_data_start`; list the .data symbols | .data initialisers shifted by sizeof(.early_data) | n/a (fixed by e2cec65) | pending |
+| T-A4 | A-4 | **Static:** vasm listing of rev2.asm:108; or MAME: execute an illegal opcode and read SR in the flash loop | immediate ≠ $0700; SR mask < 7 | mask 7 | pending |
+| T-A1 | A-1 | Program: TRAP 14 fn 16, D0=0, D2=$BB, A0=device 0; watch CSRA write | CSRA ← $40 | CSRA ← $BB | pending |
+| T-A2 | A-2 | Program (68010 build): compute (−7)/2 and (−7)%2 via the firmware's `__divsi3` | 0x7FFFFFFC / wrong remainder | −3 / −1 | pending |
+| T-A9 | A-9 | Corrupt one byte of the zipped stage2 in the ROM image; boot | boots garbage / hangs | "Stage 2 failed" message | pending |
+| T-A12 | A-12 | Set D0=$DEADBEEF, TRAP 14 fn 0 with a string | D0 changed | D0 preserved (per doc) | pending |
+| T-E1 | E-1 | `move.l #21,d0; trap #15` | crash / jump to garbage | returns normally | pending |
+| T-E2 | E-2 | `moveq #0,d1; moveq #3,d0; trap #15` | nothing printed | "0" | pending |
+| T-E3 | E-3 | Task 16 D1=0 (prompt off), then D1=1 (prompt on), then task 4 | no "?" prompt | prompt shown | pending |
+| T-E4 | E-4 | Call task 8 repeatedly for 2 s | value cycles 49..0 | monotonically increasing ticks | pending |
+| T-E6 | E-6 | Task 11 D1=$0505, then print "X"; inspect the terminal | X at row/col 5 (1-based) | X at row/col 6 (1-based) | pending |
+| T-V1 | V-1 | V9958 attached; A0=$2000, fill $2000–$2800 with $AA, call FW_CLRSCR | $2000/$2002 region modified | memory untouched | pending |
+| T-V3 | V-3 | D1.L=$00100000, PRINTCHAR at the bottom row to force a scroll; watchpoint on $100000–$10FFFF | 80-byte zero write | no write | pending |
+| T-X1 | X-1 | Xosera: write a pattern to VRAM above the text area; CUP to the last column; ESC[K | pattern erased | pattern intact | pending |
+| T-X2 | X-2 | Fill a line, cursor to column 0, ESC[K | last character remains | line fully cleared | pending |
+| T-X3 | X-3 | Cursor on the bottom row, ESC E | no scroll; cursor off-screen | scrolls one line | pending |
+| T-B1 | B-1 | FAT SD image with a 750 KB ROSCODE1.BIN; boot | hang/crash near the end of load | load rejected or bounded | pending |
+| T-B2 | B-2 | Kermit-send a file > 704 KB | corruption near $F0000 | transfer rejected | pending |
+| T-B4 | B-4 | SD model returning an error on CMD58 | boot proceeds with garbage card type | init error reported | pending |
+| T-B8 | B-8 | IDE image > 128 GiB with a partition beyond LBA 2^28 | reads/writes wrap to low sectors | error or LBA48 | pending |
+| T-B17 | B-17 | 0-byte ROSCODE1.BIN on SD | "Loaded 0 bytes", jumps to garbage | load refused | pending |
+
+## Library findings (build a test program against v2.42 libs)
+| ID | Finding | Steps | Expected if bug present | Pass criterion | Status |
+|----|---------|-------|-------------------------|----------------|--------|
+| T-D1 | D-1 | `e68PrintStrReadNumSigned("Enter: ")` | no or garbage prompt | "Enter: " printed | pending |
+| T-D2 | D-2 | `char b[8]; memcpy(b,"abc",4)==b` | false | true | pending |
+| T-D5 | D-5 | Allocate until NULL; pre-fill memsize−32K with $FF; free the last block; malloc/free loop | heap corruption / crash | stable | pending |
+| T-D7 | D-7 | **Static:** `m68k-elf-ar t libm.a` | lists printf.o, sdfat, vterm, … | math objects only | pending |
+| T-D8 | D-8 | softfloat: `n=sprintf(b,"ab%f",1e10)` | n and b wrong | n = strlen(b) | pending |
+| T-D11 | D-11 | `readline(buf, 300)` and type 280 characters | buffer start overwritten | 299 characters stored | pending |
+| T-D12 | D-12 | `vt_move_cursor_left(1)` | cursor moves right | moves left | pending |
+| T-D13 | D-13 | gdb to MAME; send characters while running, then break in | characters lost | delivered | pending |
+
+## UI rules (carried over; only applies if a GUI/TUI is built)
 | ID | Spec ref | Description | Expected result | Status |
 |----|----------|-------------|-----------------|--------|
-| T-UI-1 | UI-1 | Start the UI with no config | White background, black text | pending |
-| T-UI-2 | UI-2 | Compute the contrast ratio of every theme colour pair | All pairs ≥ 4.5:1 | pending |
-| T-UI-3 | UI-3 | Switch the preset to AAA at runtime | All pairs ≥ 7:1 without a restart | pending |
-| T-UI-4 | UI-4 | Set the preset in the config file and restart | The preset is applied at startup | pending |
+| T-UI-1 | UI-1 | Start the UI with no config | white background, black text | n/a |
+| T-UI-2 | UI-2 | Compute the contrast ratio of every theme colour pair | all ≥ 4.5:1 | n/a |
+| T-UI-3 | UI-3 | Switch the preset to AAA at runtime | all ≥ 7:1 without a restart | n/a |
+| T-UI-4 | UI-4 | Set the preset in the config file and restart | preset applied at startup | n/a |
