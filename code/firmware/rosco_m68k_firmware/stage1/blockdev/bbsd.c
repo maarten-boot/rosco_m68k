@@ -66,6 +66,7 @@ BBSDInitStatus BBSD_initialize(BBSDCard *sd) {
         if (card_type == BBSD_CARD_TYPE_V2) {
             // check OCR for SDHC...
             if (raw_sd_command(58, 0)) {
+                result = BBSD_INIT_CMD58_FAILED;
                 goto finally;
             } else {
                 if ((BBSPI_recv_byte() & 0xC0) == 0xC0) {

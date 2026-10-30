@@ -34,6 +34,7 @@ typedef enum {
     SD_INIT_IDLE_FAILED,
     SD_INIT_CMD8_FAILED,
     SD_INIT_ACMD41_FAILED,
+    SD_INIT_CMD58_FAILED,
 } SDInitStatus;
 
 typedef struct {

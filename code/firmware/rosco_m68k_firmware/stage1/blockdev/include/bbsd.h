@@ -72,6 +72,7 @@ typedef enum {
     BBSD_INIT_IDLE_FAILED,
     BBSD_INIT_CMD8_FAILED,
     BBSD_INIT_ACMD41_FAILED,
+    BBSD_INIT_CMD58_FAILED,
 } BBSDInitStatus;
 
 typedef struct {
