@@ -244,3 +244,6 @@
 ## 24. Crosscheck after worktree removal
 **User:** "pushed, now crosscheck spec, plan and code" (no corrections needed).
 - **Result:** consistent. Code unchanged since review-round-3; only docs changed. No references to removed worktree paths; all referenced test files exist (one false-positive match on a library path). Plan crosscheck row (14) added.
+
+## 25. Tag round 4
+**User:** "pushed, tag it as review-round-4" (no corrections needed). Annotated tag on planning/session-docs, as for the earlier rounds.
