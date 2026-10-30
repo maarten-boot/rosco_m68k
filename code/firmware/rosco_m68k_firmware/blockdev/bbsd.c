@@ -20,12 +20,12 @@
 #include "bbsd.h"
 #include "bbspi.h"
 
-static bool wait_for_card(uint32_t);
+static bool wait_for_card(uint32_t, uint32_t);
 static void reset_card();
 static bool wait_for_block_start();
 static bool send_idle();
 static BBSDCardType get_card_type();
-static bool try_acmd41(uint32_t, uint32_t);
+static bool try_acmd41(uint32_t, uint32_t, uint32_t);
 static uint8_t raw_sd_command(uint8_t, uint32_t);
 static uint8_t raw_sd_command_force(uint8_t, uint32_t, bool);
 static uint8_t raw_sd_acommand(uint8_t, uint32_t);
@@ -62,7 +62,7 @@ BBSDInitStatus BBSD_initialize(BBSDCard *sd) {
     // Try to initialize the card...
     uint32_t supports = card_type == BBSD_CARD_TYPE_V2 ? 0x40000000 : 0;
 
-    if (try_acmd41(BBSD_MAX_ACMD41_RETRIES, supports)) {
+    if (try_acmd41(BBSD_INIT_TIMEOUT_MS, BBSD_MAX_ACMD41_RETRIES, supports)) {
         if (card_type == BBSD_CARD_TYPE_V2) {
             // check OCR for SDHC...
             if (raw_sd_command(58, 0)) {
@@ -321,7 +321,7 @@ bool BBSD_write_block(BBSDCard *sd, uint32_t block, uint8_t *buffer) {
 
     if ((token & DATA_RESPONSE_MASK) != WRITE_RESPONSE_OK) {
         result = false;
-    } else if (!wait_for_card(BBSD_WRITE_WAIT_RETRIES)) {
+    } else if (!wait_for_card(BBSD_WRITE_TIMEOUT_MS, BBSD_WRITE_WAIT_RETRIES)) {
         // Accepted, but the card stayed busy (MISO low) too long
         result = false;
     } else {
@@ -335,8 +335,26 @@ finally:
 
 
 /* ********* PRIVATE *********** */
-static bool wait_for_card(uint32_t nops) {
-    for (uint32_t i = 0; i < nops; i++) {
+
+// SD timeouts are specified in time (SD Physical Layer spec: up to 100ms
+// read access, 250ms/500ms write busy, 1s initialisation), so measure them
+// with the 100Hz SDB upticks counter. 'max_polls' is only a fallback for
+// callers that run with interrupts masked, where upticks does not advance.
+static inline uint32_t get_upticks(void) {
+    volatile uint32_t *p;
+    // Launder the fixed SDB address ($40C) so GCC's -Warray-bounds does not
+    // treat it as a null-page access (blockdev isn't built with min-pagesize=0)
+    __asm__ ("" : "=a" (p) : "0" (0x40C));
+    return *p;
+}
+
+static bool timed_out(uint32_t start, uint32_t ms, uint32_t polls, uint32_t max_polls) {
+    return (get_upticks() - start) > (ms / 10 + 1) || polls >= max_polls;
+}
+
+static bool wait_for_card(uint32_t ms, uint32_t max_polls) {
+    uint32_t start = get_upticks();
+    for (uint32_t i = 0; !timed_out(start, ms, i, max_polls); i++) {
         if (BBSPI_recv_byte() == 0xFF) {
             return true;
         }
@@ -353,7 +371,8 @@ static void reset_card() {
 }
 
 static bool wait_for_block_start() {
-    for (uint32_t i = 0; i < BBSD_BLOCK_START_TIMEOUT; i++) {
+    uint32_t start = get_upticks();
+    for (uint32_t i = 0; !timed_out(start, BBSD_READ_TIMEOUT_MS, i, BBSD_BLOCK_START_TIMEOUT); i++) {
         uint8_t status = BBSPI_recv_byte();
         if (status != 0xFF) {
             if (status == BLOCK_START) {
@@ -397,8 +416,9 @@ static BBSDCardType get_card_type() {
     }
 }
 
-static bool try_acmd41(uint32_t nops, uint32_t supports) {
-    for (uint32_t i = 0; i < nops; i++) {
+static bool try_acmd41(uint32_t ms, uint32_t max_tries, uint32_t supports) {
+    uint32_t start = get_upticks();
+    for (uint32_t i = 0; !timed_out(start, ms, i, max_tries); i++) {
         if (raw_sd_acommand(41, supports) == R1_READY_STATE) {
             return true;
         }
@@ -414,7 +434,11 @@ static uint8_t raw_sd_command(uint8_t command, uint32_t arg) {
 static uint8_t raw_sd_command_force(uint8_t command, uint32_t arg, bool force) {
     BBSPI_assert_cs0();
 
-    if (!wait_for_card(BBSD_COMMAND_WAIT_RETRIES) && !force) {
+    // Forced commands (reset/idle at init) keep the short poll-count wait,
+    // so probing with no card fitted (MISO held low) cannot stall the boot
+    bool ready = force ? wait_for_card(0, BBSD_FORCED_WAIT_POLLS)
+                       : wait_for_card(BBSD_BUSY_TIMEOUT_MS, BBSD_COMMAND_WAIT_RETRIES);
+    if (!ready && !force) {
         return 0xFF;
     }
 

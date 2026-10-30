@@ -30,9 +30,25 @@
 #define R1_ILLEGAL_COMMAND  0x04
 #define BLOCK_START         0xFE
 
-// Timings - these are measured in 'nops' (number of operations, basically the
-// number of times it will loop waiting for the condition. This means they'll
-// need to be tuned based on your CPU speed and SPI routines, for example.
+// Timeouts in milliseconds, measured with the 100Hz SDB upticks counter
+// (values from the SD Physical Layer spec, with margin).
+#ifndef BBSD_READ_TIMEOUT_MS
+#define BBSD_READ_TIMEOUT_MS            200     // spec: 100ms read access
+#endif
+#ifndef BBSD_WRITE_TIMEOUT_MS
+#define BBSD_WRITE_TIMEOUT_MS           500     // spec: 250ms SDSC/SDHC, 500ms SDXC
+#endif
+#ifndef BBSD_BUSY_TIMEOUT_MS
+#define BBSD_BUSY_TIMEOUT_MS            500     // card still busy before a command
+#endif
+#ifndef BBSD_INIT_TIMEOUT_MS
+#define BBSD_INIT_TIMEOUT_MS            1000    // spec: 1s ACMD41 initialisation
+#endif
+
+// Poll counts - the number of times a loop polls the card. The *_TIMEOUT
+// and *_RETRIES values used with the _MS timeouts above are only fallback
+// caps for when interrupts are masked (upticks not running); the others
+// are still plain counts.
 #ifndef BBSD_RESET_CYCLES
 #define BBSD_RESET_CYCLES               10
 #endif
@@ -40,19 +56,22 @@
 #define BBSD_IDLE_TIMEOUT               20
 #endif
 #ifndef BBSD_BLOCK_START_TIMEOUT
-#define BBSD_BLOCK_START_TIMEOUT        200
+#define BBSD_BLOCK_START_TIMEOUT        20000
 #endif
 #ifndef BBSD_MAX_IDLE_RETRIES
 #define BBSD_MAX_IDLE_RETRIES           5
 #endif
 #ifndef BBSD_MAX_ACMD41_RETRIES
-#define BBSD_MAX_ACMD41_RETRIES         400
+#define BBSD_MAX_ACMD41_RETRIES         4000
+#endif
+#ifndef BBSD_FORCED_WAIT_POLLS
+#define BBSD_FORCED_WAIT_POLLS          100     // previous BBSD_COMMAND_WAIT_RETRIES
 #endif
 #ifndef BBSD_COMMAND_WAIT_RETRIES
-#define BBSD_COMMAND_WAIT_RETRIES       100
+#define BBSD_COMMAND_WAIT_RETRIES       50000
 #endif
 #ifndef BBSD_WRITE_WAIT_RETRIES
-#define BBSD_WRITE_WAIT_RETRIES         2500
+#define BBSD_WRITE_WAIT_RETRIES         50000
 #endif
 #ifndef BBSD_DATA_RESPONSE_RETRIES
 #define BBSD_DATA_RESPONSE_RETRIES      16
