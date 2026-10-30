@@ -289,3 +289,7 @@
 
 ## 35. Tag round 8
 **User:** "pushed, tag it as review-round-8" (no corrections needed). Annotated tag on planning/session-docs, as for the earlier rounds.
+
+## 36. Crosscheck after round 8
+**User:** "pushed, now crosscheck spec, plan and code" (no corrections needed).
+- **Result:** consistent, nothing new. Plan crosscheck row (19) added. Claude noted that the last rounds changed only the log itself.
