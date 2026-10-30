@@ -48,6 +48,8 @@ bool start_debugger(void) {
         return false;
     }
 
+    // The ring buffer indexes with 'ptr & mask', so mask must be size - 1
+    uart_b.mask = sizeof(uart_b.data) - 1;
     duart_install_interrupt(&device, NULL, &uart_b);
 
     set_debug_traps();
