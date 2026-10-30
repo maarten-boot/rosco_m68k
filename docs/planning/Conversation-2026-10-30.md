@@ -252,3 +252,6 @@
 **User:** "yes, fix the M12 line" (no corrections needed).
 - **Plan.md M12:** "4 commits, not pushed" → 5 commits, pushed, tag review-round-2.
 - **FixStrategy.md:** two more stale lines found and fixed: the header "No fixes have been made yet" and §4 "fix/* … Not pushed".
+
+## 27. Tag round 5
+**User:** "pushed, tag it as review-round-5" (no corrections needed). The tag already existed locally as a lightweight tag on 4c71469, made by the user. Claude left it unchanged; only this log entry was committed.
