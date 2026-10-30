@@ -16,6 +16,7 @@
 | M7 | Build v2.42 (link map, vasm listing) for the static tests T-A3, T-A4, T-D7 | done 2026-10-30 (ROM bit-identical to emulator v242; all 3 confirmed) |
 | M8 | Check MAME (`../rosco-emulator`) has the r2 driver; run the P1 tests | partly done 2026-10-30: driver `rosco_m68k_0x0` with `-bios v242`; 12 findings confirmed (tests/). Still open: K-1, K-4, V-1, V-3, X-1, E-3, E-6, B-2, B-4, D-x library tests |
 | M8b | Remaining runtime tests: kernel task exit (K-1), warm-boot IRQ chain (K-4), V9958/Xosera (check whether MAME models them), library tests | done 2026-10-30: 8 more confirmed, 3 partly, 1 not reproduced (D-5); MAME has no V9958/Xosera; no host Kermit |
+| R3 | Full InterfaceReference ↔ code conformance table | done 2026-10-30 → reviews/R3-interface-table.md (6 new findings) |
 | M9 | Decide per finding: fix on a v2.42 maintenance branch, fix on develop, or upstream an issue | proposed |
 
 ## Crosscheck log
@@ -25,3 +26,4 @@
 | 2026-10-30 (2) | After M7/M8: Spec R-8 is now partly met (12 of 34 tests run, all 12 confirm the bug, 0 false positives so far). Spec scope corrected: debug_stub is in the default build. Findings.md and Tests.md match the code and the run results. Open: R-3 still has no full API table; M8b is not run yet. |
 | 2026-10-30 (3) | After M8b: 22 findings confirmed at runtime or statically, 3 partly confirmed, 1 not reproduced (D-5). Untestable here: X-*, V-3, B-2, B-6, recorded in Tests.md. Spec R-8 is met as far as this emulator allows. Open: R-3 API table; M9. |
 | 2026-10-30 (4) | Pending tests run: A-2, B-8, B-17, D-1, D-11 confirmed; A-9 latent; D-13 not testable. New finding B-19 (IDE/ATA EFPs built as stubs in the release) was confirmed and added to the Spec scope under R-1. Next: R-3. |
+| 2026-10-30 (5) | R-3 is met: 117-row table; new findings E-8, B-20, B-21, E-9, D-19, D-20, A-22, and E-5 upgraded. All Spec requirements R-1…R-8 are now addressed. Open: M9 (fix strategy), plus untestable items (Xosera, V9958, Kermit, gdb, slow SD) that need hardware or tools. |

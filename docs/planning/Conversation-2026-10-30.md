@@ -92,3 +92,7 @@
 - **New B-19:** IDE boot never works on the v2.42 release, because `ROSCO_M68K_ATA` reaches gcc but not vasm, so the ATA EFP entry points are stubs. Fixed on develop (d375bc2).
   - **Proof:** a test-only build with the define added to vasm boots from IDE.
   - **B-8:** confirmed on that build. A partition at LBA 2^28+2048 loads the decoy kernel at LBA 2048.
+- **R-3:** an agent built the conformance table: 117 rows (56 match, 11 match except for the A0 clobber, 32 partial, 10 mismatch, 8 stubs, 0 missing, 14 undocumented).
+  - **Main session checked:** the TRAP15 A0 clobber (E-8) and the task-7 r2.x stub (E-5) in source.
+  - **New findings:** E-8, B-20, B-21, E-9, D-19, D-20, A-22.
+  - Spec R-3 marked met; all of R-1…R-8 are now addressed.

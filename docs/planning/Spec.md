@@ -17,7 +17,7 @@ _Status: agreed scope 2026-10-30._
 |----|-------------|-------------------|
 | R-1 | Find correctness errors (bugs, crashes, register/ABI misuse, hardware access errors) in the v2.42 firmware. | 2026-10-30 |
 | R-2 | Find correctness errors in the v2.42 user libraries. | 2026-10-30 |
-| R-3 | "Missing": list the functions documented in `InterfaceReference.md` that are not implemented, or are implemented differently. | 2026-10-30 |
+| R-3 | "Missing": list the functions documented in `InterfaceReference.md` that are not implemented, or are implemented differently. | 2026-10-30 — **met** by `reviews/R3-interface-table.md` (117 rows) |
 | R-4 | "Missing": list the TODO/FIXME/stub/unimplemented paths. | 2026-10-30 |
 | R-5 | "Missing": list r2.x hardware features that have no driver or only partial support. | 2026-10-30 |
 | R-6 | List the fixes on `develop` after v2.42 that affect an r2.x 1M board, so the user can decide whether to upgrade. | 2026-10-30 |

@@ -99,3 +99,20 @@ Duplicates merged below: A-2 = B-14 (signed division); K-3 = part of D-18 (KERNE
 - **Fixed on develop:** B-7, A-3, A-5, A-8, A-10, A-11, A-13, X-10, S-2/D-16, D-9, D-15, plus keyboard/LED/exit fixes. See `reviews/M3e-develop-diff.md`.
 - **Not fixed on develop:** all of P1 except B-7 and A-3, and almost all of P2/P3. Upgrading alone does not resolve the main findings.
 - **Cost of upgrading:** develop is untagged (2.50.DEV) and needs a full reflash, a new toolchain and a new ROMFS image; Xosera base moves to the VDB.
+
+## R-3 interface conformance (2026-10-30)
+Full table: `reviews/R3-interface-table.md`. It has 117 rows: 56 match, 11 match except for the A0 clobber, 32 partial, 10 mismatch, 8 stub (all ATA), 0 missing, and 14 undocumented items.
+
+New findings from R-3 (✔ = checked in source by the main session):
+| ID | Finding | Sev | Dev |
+|----|---------|-----|-----|
+| E-8 ✔ | TRAP #15 trashes A0 on every task (`move.l JUMPTABLE(PC,D0),A0`, never restored); the doc says all other registers are preserved | medium | no |
+| B-20 | TRAP #13 trashes A0 on every function, including CHECK_* (FC 0, 5, 15); the doc lists only D0 | low | no |
+| B-21 | CHECK_ATA_SUPPORT returns the success magic while all four ATA entries are stubs (makes B-19 silent) | high (with B-19) | yes (d375bc2) |
+| E-5 ✔ (upgraded) | TRAP #15 task 7 always returns 0 on r2.x (the ROM contains only `move.b #0,D1`) | high | no |
+| E-9 | TRAP #15 task 9 jumps to HALT directly; EFP_HALT is never used | low | no |
+| D-19 | libs `e68GetTicks` leaves the upper word of the result undefined (combines with E-4) | low | no |
+| D-20 | User libs have no wrappers for TRAP #13 SPI/ATA/CHECK_*; link scripts lack `_EFP_*` for $490/$494/$498 and a symbol for $40A | low | partial |
+| A-22 | Doc text for SPI chip-select pins and SDB flag bits 14-10 ("MUST BE 1 for SPI/SD") describes r1.x/MFP behaviour; nothing in the r2.x build enforces them | doc | partial |
+
+Refinements: A-12 (PRINT/PRINTLN trash D0) happens only on the serial console; the V9958 and Xosera consoles preserve D0. E-6 is a 0-based doc against 1-based ANSI addressing, not a loop bug.
