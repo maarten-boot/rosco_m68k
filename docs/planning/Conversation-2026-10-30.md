@@ -321,3 +321,8 @@
 
 ## 42. Tag round 11
 **User:** "pushed, tag it as review-round-11" (no corrections needed). Annotated tag on planning/session-docs, as for the earlier rounds.
+
+## 43. Re-run updateflash
+**User:** "run updateflash in the ../rosco-m68k session". **Correction asked:** there is no ../rosco-m68k; this session is rosco-m68k-9a, the other related one is rosco-emulator-93. **User chose:** this session.
+- **Run:** updateflash end-to-end with the saved inputs (2.42.1 ROM SHA1 f2d1344d…, SD image) on the current ../rosco-emulator binary (rebuilt 18:42 by another session; `src/` identical to cec16b598fa). Emulator repo not changed.
+- **Result:** PASS: reboots into "Classic 2.42.1"; flash = image (0 of 40262 bytes differ); cold restart with `-bios v242` on the same NVRAM boots 2.42.1. Tests.md T-EMU6 updated.
