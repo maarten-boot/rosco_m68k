@@ -240,3 +240,7 @@
 - **Checked first:** 0 unpushed commits on maint/2.42 and fix/*; untracked files were only build output and test programs whose sources are in docs/planning/tests.
 - **Saved:** the shared flash-test Makefile (-lsst_flash) to tests/flash/.
 - **Removed:** the scratchpad worktrees maint and dev with `git worktree remove --force`. The branches themselves are untouched.
+
+## 24. Crosscheck after worktree removal
+**User:** "pushed, now crosscheck spec, plan and code" (no corrections needed).
+- **Result:** consistent. Code unchanged since review-round-3; only docs changed. No references to removed worktree paths; all referenced test files exist (one false-positive match on a library path). Plan crosscheck row (14) added.
