@@ -69,7 +69,7 @@ TICK_HANDLER::
 
 
 BUS_ERROR_HANDLER::
-    or.w    #0700,SR                  ; Disable exceptions
+    or.w    #$0700,SR                  ; Disable exceptions
 
     move.b  #0,MFP_IERA               ; Disable MFP interrupts
     move.b  #0,MFP_IERB               
@@ -88,7 +88,7 @@ BUS_ERROR_HANDLER::
 
 
 ADDRESS_ERROR_HANDLER::
-    or.w    #0700,SR                  ; Disable exceptions
+    or.w    #$0700,SR                  ; Disable exceptions
 
     move.b  #0,MFP_IERA               ; Disable MFP interrupts
     move.b  #0,MFP_IERB               
@@ -113,7 +113,7 @@ ADDRESS_ERROR_HANDLER::
 
 
 ILLEGAL_INSTRUCTION_HANDLER::
-    or.w    #0700,SR                  ; Disable exceptions
+    or.w    #$0700,SR                  ; Disable exceptions
 
     move.b  #0,MFP_IERA               ; Disable MFP interrupts
     move.b  #0,MFP_IERB               
