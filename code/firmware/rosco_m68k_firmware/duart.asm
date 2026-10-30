@@ -398,10 +398,10 @@ D_CTRL_DUART_A:
 
     move.l  (A0),A0               ; Get DUART base address
 
-    ; Set baudrate command - D1.B contains receiver (high nibble)
+    ; Set baudrate command - D2.B contains receiver (high nibble)
     ; and transmitter (low nibble) baud selection, taken from 
     ; Bit Rate Set 2 in Table 9 of the XR68C681 datasheet.
-    move.b  D1,DUART_CSRA(A0)     ; Set DUART_CSRA with argument
+    move.b  D2,DUART_CSRA(A0)     ; Set DUART_CSRA with argument (D2.B)
     moveq.l #1,D0
     bra.s   .done
 
@@ -426,10 +426,10 @@ D_CTRL_DUART_B:
 
     move.l  (A0),A0               ; Get DUART base address
 
-    ; Set baudrate command - D1.B contains receiver (high nibble)
+    ; Set baudrate command - D2.B contains receiver (high nibble)
     ; and transmitter (low nibble) baud selection, taken from 
     ; Bit Rate Set 2 in Table 9 of the XR68C681 datasheet.
-    move.b  D1,DUART_CSRB(A0)     ; Set DUART_CSRB with argument
+    move.b  D2,DUART_CSRB(A0)     ; Set DUART_CSRB with argument (D2.B)
     moveq.l #1,D0
     bra.s   .done
 
