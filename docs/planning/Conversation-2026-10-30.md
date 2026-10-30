@@ -301,3 +301,6 @@
 - **Results:** T-EMU4, T-EMU5, T-EMU6 PASS; emulator smoke test 5/5.
 - **Merge:** dece8a1ff7c on rosco-m68k-ram-bios (local, 9 ahead of origin), tree identical to cec16b598fa. The emulator working tree was switched back to docs/planning afterwards.
 - **Docs:** Tests, Spec R-8/R-12, Plan M12 + row 20, Findings, tests/flash README; new tests/flash/chip_erase_test.c.
+
+## 38. Tag round 9
+**User:** "pushed, tag it as review-round-9" (no corrections needed). Annotated tag on planning/session-docs, as for the earlier rounds.
