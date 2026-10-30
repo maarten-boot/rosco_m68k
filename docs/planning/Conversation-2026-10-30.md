@@ -207,3 +207,4 @@
 
 ## 19. Tag round 2
 **User:** "tag it as review-round-2" (no corrections needed). "It" was read as the planning branch, the same as review-round-1 (annotated tag on planning/session-docs). The user pushes.
+**User:** "also tag maint/2.42 as v2.42.1" (no corrections needed). Created the annotated tag v2.42.1 on maint/2.42 (fa01377).
