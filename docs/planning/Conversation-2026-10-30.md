@@ -180,3 +180,6 @@
   - **Referenced test files:** all exist.
   - **Excluded as already fixed on develop:** B-7, A-3, A-5, A-8, A-10, A-11, A-13, B-17, B-19/B-21, X-10, S-2/D-16, D-9, D-15.
   - **Fixes after first render:** the index status column truncated at "v2.42"; per-issue "Affects" lines added for K-* and U-1.
+
+## 16. Push command
+**User:** "can you give me a command to push all branches ?" (no corrections needed). Claude listed the local branches and gave the push commands; the user pushes.
