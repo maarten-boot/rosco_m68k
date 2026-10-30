@@ -21,7 +21,7 @@
 | M10 | Implement batches 0–3 on `maint/2.42` (+ `fix/<ID>` ports off develop), re-running the matching tests after each batch | done 2026-10-30: batches 0–3 + D-17 (timeout, IRQ masking, verify) on maint/2.42, 42 commits, tag v2.42.1; deferred: B-8/B-9 (no IDE), K-* (kernel off), V-*/X-* (no video hw), B-16 (feature) |
 | M10b | Port new fixes to `fix/<ID>` branches off develop; build + smoke test | done 2026-10-30 (30 branches; integration build OK; develop smoke test shows bugs fixed) |
 | M11 | Draft upstream issue texts (one per confirmed finding, with repro from tests/) in docs/planning/issues/ | done 2026-10-30: 21 grouped issues + index (issues/README.md); not filed (user files them) |
-| M12 | (side project, `../rosco-emulator`) Model the 2×SST39SF040 flash in MAME's rosco_m68k driver (`sst_39sf040_device`, even/odd byte lanes, NVRAM) so updateflash/sst_flash can be tested | done 2026-10-30 on rosco-emulator branch `feature/sst-flash` (4 commits, not pushed); updateflash end-to-end PASS |
+| M12 | (side project, `../rosco-emulator`) Model the 2×SST39SF040 flash in MAME's rosco_m68k driver (`sst_39sf040_device`, even/odd byte lanes, NVRAM) so updateflash/sst_flash can be tested | done 2026-10-30 on rosco-emulator branch `feature/sst-flash` (5 commits incl. the D-17 AND-semantics fix aa2de25, pushed, tag review-round-2); updateflash end-to-end PASS |
 
 ## Crosscheck log
 | Date | Spec ↔ Plan ↔ Code result |

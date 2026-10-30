@@ -1,6 +1,6 @@
 # Fix strategy — rosco_m68k v2.42 findings (M9)
 
-_2026-10-30. No fixes have been made yet._
+_2026-10-30. Written before any fix was made; the batches below are now marked with what was done (see §4)._
 
 ## 0. Decisions (user, 2026-10-30)
 | # | Decision |
@@ -112,4 +112,4 @@ A-6/A-7 (040/060 only), A-14 (TX FIFO, performance), A-15 (dead r1 fallback), A-
 
 ## 4. Status 2026-10-30
 - **maint/2.42:** 42 commits on v2.42, head fa01377, tagged **v2.42.1** (history was rewritten once before the first push to fix a CRLF→LF conversion of printf.c in the D-8 commit; content unchanged).
-- **develop ports:** 30 local `fix/*` branches, all building together. Not pushed: the user decides upstreaming; M11 will draft the issue texts.
+- **develop ports:** 30 `fix/*` branches, all building together, pushed to the user's fork. Upstreaming is the user's decision; the issue texts are drafted in issues/ (M11).

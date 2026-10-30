@@ -247,3 +247,8 @@
 
 ## 25. Tag round 4
 **User:** "pushed, tag it as review-round-4" (no corrections needed). Annotated tag on planning/session-docs, as for the earlier rounds.
+
+## 26. Fix stale M12 line
+**User:** "yes, fix the M12 line" (no corrections needed).
+- **Plan.md M12:** "4 commits, not pushed" → 5 commits, pushed, tag review-round-2.
+- **FixStrategy.md:** two more stale lines found and fixed: the header "No fixes have been made yet" and §4 "fix/* … Not pushed".
