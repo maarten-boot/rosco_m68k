@@ -234,3 +234,9 @@
 **User:** "pushed, tag it as review-round-3" (no corrections needed).
 - **First attempt:** failed; /tmp (tmpfs) was full. Claude asked before deleting anything. The user freed space (now 23% used) and repeated the request.
 - **Result:** annotated tag on planning/session-docs, as for rounds 1 and 2.
+
+## 23. Remove worktrees
+**User:** "yes, remove the worktrees".
+- **Checked first:** 0 unpushed commits on maint/2.42 and fix/*; untracked files were only build output and test programs whose sources are in docs/planning/tests.
+- **Saved:** the shared flash-test Makefile (-lsst_flash) to tests/flash/.
+- **Removed:** the scratchpad worktrees maint and dev with `git worktree remove --force`. The branches themselves are untouched.

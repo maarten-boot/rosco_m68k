@@ -2,7 +2,8 @@
 
 These need the emulator built from `../rosco-emulator` branch `feature/sst-flash`, which models the ROM as 2 × SST39SF040.
 
-- **`flash_program_test.c`** (build it like `tests/libtest/`, against the v2.42.1 libs):
+- **Build:** copy one test (as `main.c`) plus `Makefile` from this folder into `code/software/<name>/` and run `make` in the docker image. The Makefile links `-lsst_flash`; this applies to `../sst_timeout_test.c` too.
+- **`flash_program_test.c`** (against the v2.42.1 libs):
   - reads the chip IDs;
   - erases sector 127 on both chips, programs a pattern and verifies it through normal CPU reads.
   - Run it twice with the same `-nvram_directory`: the second run must report "pattern already present".
