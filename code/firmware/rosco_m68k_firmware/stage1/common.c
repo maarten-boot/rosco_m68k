@@ -26,11 +26,20 @@ unsigned long divmod(unsigned long num, unsigned long den, int mod) {
     }
 }
 
-uint32_t __divsi3(uint32_t dividend, uint32_t divisor) {
-    return divmod(dividend, divisor, 0);
+// Signed variants: C semantics (quotient truncates toward zero, remainder
+// takes the sign of the dividend). Magnitudes are computed unsigned so
+// INT32_MIN does not overflow.
+int32_t __divsi3(int32_t dividend, int32_t divisor) {
+    uint32_t n = dividend < 0 ? -(uint32_t)dividend : (uint32_t)dividend;
+    uint32_t d = divisor < 0 ? -(uint32_t)divisor : (uint32_t)divisor;
+    uint32_t q = divmod(n, d, 0);
+    return (int32_t)(((dividend < 0) != (divisor < 0)) ? -q : q);
 }
-uint32_t __modsi3(uint32_t dividend, uint32_t divisor) {
-    return divmod(dividend, divisor, 1);
+int32_t __modsi3(int32_t dividend, int32_t divisor) {
+    uint32_t n = dividend < 0 ? -(uint32_t)dividend : (uint32_t)dividend;
+    uint32_t d = divisor < 0 ? -(uint32_t)divisor : (uint32_t)divisor;
+    uint32_t r = divmod(n, d, 1);
+    return (int32_t)(dividend < 0 ? -r : r);
 }
 uint32_t __udivsi3(uint32_t dividend, uint32_t divisor) {
     return divmod(dividend, divisor, 0);
