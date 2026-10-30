@@ -255,3 +255,13 @@
 
 ## 27. Tag round 5
 **User:** "pushed, tag it as review-round-5" (no corrections needed). The tag already existed locally as a lightweight tag on 4c71469, made by the user. Claude left it unchanged; only this log entry was committed.
+
+## 28. Crosscheck after round 5
+**User:** "pushed, now crosscheck spec, plan and code" (no corrections needed).
+- **rosco_m68k:** consistent; code unchanged, all branches and review-round-5 equal origin.
+- **Found:** 3 new unpushed commits on rosco-emulator feature/sst-flash (17:08, not from this session): SST fixes limited to the 39SF parts, flash seeded only without NVRAM (erase persists), README per-BIOS NVRAM. Plan M12 and Findings EMU-3 are now out of date; updateflash not re-run on the new head. Plan crosscheck row (15) added.
+
+## 29. Emulator repo read-only
+**User:** "leave the emulator repo for the moment , treat it as read only".
+- No changes, builds or test runs in ../rosco-emulator until the user says otherwise.
+- The planning docs keep describing the tagged state (review-round-2 = aa2de25). Plan M12 and Findings EMU-3 stay as they are; the 3 newer commits are recorded only in Plan crosscheck row 15.
