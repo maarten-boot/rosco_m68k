@@ -293,3 +293,11 @@
 ## 36. Crosscheck after round 8
 **User:** "pushed, now crosscheck spec, plan and code" (no corrections needed).
 - **Result:** consistent, nothing new. Plan crosscheck row (19) added. Claude noted that the last rounds changed only the log itself.
+
+## 37. Re-run updateflash and merge the emulator branch
+**User:** "re-run updateflash (T16) against the current feature/sst-flash, then merge it."
+- **Corrections asked:** there is no test T16 (updateflash is part of T-EMU6), and the merge target was unclear. **User chose:** run all of T-EMU4…6 (lifting the emulator read-only rule for this), and merge into rosco-m68k-ram-bios with `--no-ff`.
+- **Build:** emulator rebuilt at cec16b598fa (2 files recompiled); v2.42.1 rebuilt in a scratchpad worktree: ROM SHA1 f2d1344d… (unchanged), libs, updateflash, flash test, new chip-erase test.
+- **Results:** T-EMU4, T-EMU5, T-EMU6 PASS; emulator smoke test 5/5.
+- **Merge:** dece8a1ff7c on rosco-m68k-ram-bios (local, 9 ahead of origin), tree identical to cec16b598fa. The emulator working tree was switched back to docs/planning afterwards.
+- **Docs:** Tests, Spec R-8/R-12, Plan M12 + row 20, Findings, tests/flash README; new tests/flash/chip_erase_test.c.

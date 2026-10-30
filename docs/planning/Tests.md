@@ -138,13 +138,13 @@ Build: all 30 `fix/*` branches merged into a temporary integration branch withou
 | D-17 timeout with real flash model | normal programming never hits the cap (sector erase 125 ms) |
 | Intermediate commit 23a2ae3 builds; head builds; scripts use fresh NVRAM (`rosco-test.sh -e 'Classic 2.42.1'` with the maint ROM PASS) | **PASS** |
 
-Re-verification of the emulator review fixes (EMU-4…6, commits aa2de25..cec16b598fa). **Pending**: the emulator repo is read-only for now. The commit messages report PASS for T-EMU5, T-EMU4 and the chip-ID part of T-EMU6, but this session has not run them.
+Re-verification of the emulator review fixes (EMU-4…6, commits aa2de25..cec16b598fa). **Run 2026-10-30** on an emulator rebuilt at cec16b598fa (rosco_m68k.cpp and intelfsh.cpp recompiled), with the 2.42.1 ROM rebuilt from tag v2.42.1 (SHA1 f2d1344d…, unchanged) and its libs. `scripts/smoke-test.sh`: 5/5 machines PASS.
 
 | Test | Spec | Steps | Expect | Result |
 |------|------|-------|--------|--------|
-| T-EMU4 | R-12 | Boot `rosco_m68k_010` (v250), then `-bios v242`, with the same `-nvram_directory` | each boots its own firmware; NVRAM in `rosco_m68k_010/` and `rosco_m68k_010_1/` | pending |
-| T-EMU5 | R-12 | Chip-erase both chips from software, exit MAME (NVRAM saved), start again with the same NVRAM dir | no banner (board "bricked"); a fresh `-nvram_directory` boots | pending |
-| T-EMU6 | R-12 | Re-run `flash_program_test.c` and `updateflash_harness.py` on cec16b598fa | IDs BF/B7; pattern PASS; updateflash 2.42 → 2.42.1 PASS (the 39SF-only check still covers the board's chip, ID 0xB7) | pending |
+| T-EMU4 | R-12 | Boot `rosco_m68k_010` (v250), then `-bios v242`, with the same `-nvram_directory` | each boots its own firmware; NVRAM in `rosco_m68k_010/` and `rosco_m68k_010_1/` | **PASS**: default → 2.50.DEV, `-bios v242` → 2.42, default again → 2.50.DEV; both NVRAM dirs present |
+| T-EMU5 | R-12 | Chip-erase both chips from software, exit MAME (NVRAM saved), start again with the same NVRAM dir | no banner (board "bricked"); a fresh `-nvram_directory` boots | **PASS** with `tests/flash/chip_erase_test.c` (chip erase on both chips, IRQs masked, then STOP): both NVRAM files 512 KiB with 0 non-FF bytes; restart on the same NVRAM: 0 console bytes; fresh NVRAM: "Classic 2.42" |
+| T-EMU6 | R-12 | Re-run `flash_program_test.c` and `updateflash_harness.py` on cec16b598fa | IDs BF/B7; pattern PASS; updateflash 2.42 → 2.42.1 PASS (the 39SF-only check still covers the board's chip, ID 0xB7) | **PASS**: both chips bf/b7; 8160 mismatches before, program ok, 0 after; second MAME run "pattern already present". updateflash: reboots into "Classic 2.42.1"; flash = image (0 of 40262 bytes differ); cold restart `-bios v242` on the same NVRAM → 2.42.1 |
 
 ## D-17 option 3: interrupt masking + verify (maint fa01377, 2026-10-30, flash-ROM model incl. intelfsh "program only clears bits" fix aa2de25)
 | Test (`tests/flash/sst_verify_irq_test.c`) | timeout-only lib | with option 3 |

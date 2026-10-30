@@ -12,3 +12,4 @@ These need the emulator built from `../rosco-emulator` branch `feature/sst-flash
   - Answers the ENTER/Y prompts over a socket console.
   - Prints the console output from "flash update in progress" up to the next boot.
   - Arguments: `emu sdimage port cwd rompath nvramdir`.
+- **`chip_erase_test.c`** (T-EMU5): chip-erases both flash chips with interrupts masked, then stops the CPU. Run it from an SD image as ROSCODE1.BIN with a fresh `-nvram_directory`; afterwards both NVRAM files must be all 0xFF and a restart on the same NVRAM must print nothing.
