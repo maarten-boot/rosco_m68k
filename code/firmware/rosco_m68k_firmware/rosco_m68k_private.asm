@@ -13,6 +13,8 @@
 
 ; Version (embedded into firmware at 0xFC0400)
 ; MSW is flags, LSW is split into major (MSB) and minor (LSB)
+; (There is no patch field: maintenance release 2.42.1 keeps $0242 here and
+; shows the patch level only in the boot banner.)
 ;
 ; Flags:
 ; bit 0 - 12: Reserved
