@@ -31,7 +31,7 @@ Chosen: **C** (D1).
 ## 2. Batches (proposed order for option B/C)
 Effort: S = under 1 h, M = a few hours, L = a day or more. "Verify" = test ID in Tests.md, re-run after the fix. A test that now FAILs must PASS afterwards.
 
-### Batch 0 — build configuration only (no code changes)
+### Batch 0 — build configuration only (no code changes) — **done 2026-10-30** (29a2b69, d14d648)
 | ID(s) | Action | Target | Effort | Verify |
 |-------|--------|--------|--------|--------|
 | B-19, B-21 | Add `DEFINES:=$(DEFINES) -DROSCO_M68K_ATA` to `blockdev/include.mk` (the 1-line part of develop's d375bc2) | maint | S | T-B19 |
@@ -40,7 +40,7 @@ Effort: S = under 1 h, M = a few hours, L = a day or more. "Verify" = test ID in
 
 D3 decided: NO_KERNEL=true on a 68010. D2 (fitted hardware) is still open.
 
-### Batch 1 — backports from develop (small and already reviewed upstream)
+### Batch 1 — backports from develop (small and already reviewed upstream) — **done 2026-10-30**, except 44c9b5a (68000 only, optional), c8ec0ba (keyboard, D2 open) and f54f73e (GALs)
 | ID | Develop commit | Notes | Effort | Verify |
 |----|----------------|-------|--------|--------|
 | B-7 | 478bac2 | SPI read LED/OPCR registers | S | T-B7 |

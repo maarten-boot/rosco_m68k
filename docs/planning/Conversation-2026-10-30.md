@@ -120,3 +120,12 @@
   - The minix2 TRAP 13 SD path promotes B-4, B-5, B-6, B-12 and B-20.
   - K-* deferred.
 - **Plan:** M9 done; M10 (implementation) next; M11 (issue texts) proposed.
+
+## 11. M10 batches 0 and 1
+**User:** "yes, start with batches 0 and 1" (no corrections needed).
+- Created `maint/2.42` from tag v2.42 (worktree in the scratchpad; the commits are in the repo).
+  - **Batch 0:** NO_KERNEL default (29a2b69); ATA define for vasm (d14d648).
+  - **Batch 1, cherry-picked:** 478bac2, 849bc81, 2b18fb2, c899e46.
+  - **Batch 1, hand-ported:** A-3 via `_data_load_start` (82377cc), 1468b51 with path rewrite (06ab09f), heartbeat bit A-10 (4f07454).
+  - **Skipped:** 44c9b5a (68000 only), c8ec0ba (keyboard, D2 open), f54f73e (GALs).
+- **Regression (ROM 6b18ee0d…):** T-K3, T-B19, T-B7, T-A3, CPU banner 000/010/020, RAM size, SD boot and the libs build all PASS.

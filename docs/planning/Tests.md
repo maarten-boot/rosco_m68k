@@ -56,3 +56,19 @@ _Status legend: pending = not run; "Static" = can be verified from a build artef
 | T-UI-2 | UI-2 | Compute the contrast ratio of every theme colour pair | all ≥ 4.5:1 | n/a |
 | T-UI-3 | UI-3 | Switch the preset to AAA at runtime | all ≥ 7:1 without a restart | n/a |
 | T-UI-4 | UI-4 | Set the preset in the config file and restart | preset applied at startup | n/a |
+
+## Regression runs on `maint/2.42`
+### Batches 0+1 (2026-10-30, ROM SHA1 6b18ee0d…, maint/2.42 @ 4f07454)
+| Test | Fix | Result |
+|------|-----|--------|
+| T-K3 | NO_KERNEL default (K-*) | **PASS**: $400 = $B105D47A at 6 s (was $00001DF8) |
+| T-B19 | ATA define for vasm (B-19/B-21) | **PASS**: FW_ATA_INIT calls ATA_init; boots ROSCODE1.BIN from an IDE image ("ATA Device 0: … Loaded 112 bytes") |
+| T-B7 | 478bac2 (SPI LED registers) | **PASS**: OPCR written once ($00, init) during SD boot; no $08 writes (was 5) |
+| T-A3 | _data_load_start (A-3) | **PASS** (static + ROM bytes): copy source = .data LMA + $206; `selected_drive` initialiser = $FF |
+| CPU banner | 1468b51 (A-8) | **PASS**: rosco_m68k_000 → MC68000, _010 → MC68010, _020 → MC68020 (42.8 MHz is a known MAME timing artefact) |
+| RAM size | 849bc81 (A-5) | **PASS**: 1048576 bytes on 000/010/020 |
+| SD boot | regression | **PASS**: loads ROSCODE1.BIN from SD |
+| libs build | 2b18fb2 (D-15), c899e46 (S-2/D-16) | **PASS**: libs and firmware build with -Werror; runtime check of the debug_stub frames on 020 still to do |
+| A-10 | heartbeat bit | static: `btst #0` on the SYSFLAGS high byte (bit 8) |
+
+Note: the earlier test programs that call fixed ROM addresses (`t_div`, `t_misc` V-1) must use the new map addresses on maint builds. The kernel tests (T-K1, T-K2, T-K4) no longer apply with NO_KERNEL=true.

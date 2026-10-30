@@ -18,7 +18,7 @@
 | M8b | Remaining runtime tests: kernel task exit (K-1), warm-boot IRQ chain (K-4), V9958/Xosera (check whether MAME models them), library tests | done 2026-10-30: 8 more confirmed, 3 partly, 1 not reproduced (D-5); MAME has no V9958/Xosera; no host Kermit |
 | R3 | Full InterfaceReference ↔ code conformance table | done 2026-10-30 → reviews/R3-interface-table.md (6 new findings) |
 | M9 | Decide per finding: fix on a v2.42 maintenance branch, fix on develop, or upstream an issue | done 2026-10-30 → FixStrategy.md (D1=C, D3=NO_KERNEL on 68010, D4=issue texts; D2 hardware open) |
-| M10 | Implement batches 0–3 on `maint/2.42` (+ `fix/<ID>` ports off develop), re-running the matching tests after each batch | next |
+| M10 | Implement batches 0–3 on `maint/2.42` (+ `fix/<ID>` ports off develop), re-running the matching tests after each batch | batches 0+1 done 2026-10-30 (9 commits, all regression tests PASS); batch 2 next |
 | M11 | Draft upstream issue texts (one per confirmed finding, with repro from tests/) in docs/planning/issues/ | proposed |
 
 ## Crosscheck log
@@ -29,3 +29,4 @@
 | 2026-10-30 (3) | After M8b: 22 findings confirmed at runtime or statically, 3 partly confirmed, 1 not reproduced (D-5). Untestable here: X-*, V-3, B-2, B-6, recorded in Tests.md. Spec R-8 is met as far as this emulator allows. Open: R-3 API table; M9. |
 | 2026-10-30 (4) | Pending tests run: A-2, B-8, B-17, D-1, D-11 confirmed; A-9 latent; D-13 not testable. New finding B-19 (IDE/ATA EFPs built as stubs in the release) was confirmed and added to the Spec scope under R-1. Next: R-3. |
 | 2026-10-30 (5) | R-3 is met: 117-row table; new findings E-8, B-20, B-21, E-9, D-19, D-20, A-22, and E-5 upgraded. All Spec requirements R-1…R-8 are now addressed. Open: M9 (fix strategy), plus untestable items (Xosera, V9958, Kermit, gdb, slow SD) that need hardware or tools. |
+| 2026-10-30 (6) | maint/2.42 batches 0+1: code ↔ FixStrategy ↔ Tests consistent; every changed area has a passing regression test. Open: debug_stub 020 runtime check; batch 2. |
