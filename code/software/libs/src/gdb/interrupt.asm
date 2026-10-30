@@ -122,7 +122,7 @@ HANDLER:
         btst    #1,D0                           ; Check if ready bit is set
         beq.s   .uartB                          ; Just bail now if not (and go check UART B)
 
-        move.b  DUART_SRA,D0                    ; Check if error bits are set
+        move.b  DUART_SRA(A0),D0                ; Check if error bits are set
         and.b   #$F0,D0
         beq.s   .contA                          ; Continue if not...
         bsr.s   .error                          ; ... else branch error subroutine
@@ -154,7 +154,7 @@ HANDLER:
         btst    #5,D0                           ; Check if ready bit is set
         beq.s   .chain                          ; Just bail now if not (and go check timer tick)
 
-        move.b  DUART_SRB,D0                    ; Check if error bits are set
+        move.b  DUART_SRB(A0),D0                    ; Check if error bits are set
         and.b   #$F0,D0
         beq.s   .contB                          ; Continue if not...
         bsr.s   .error                          ; ... else branch error subroutine
