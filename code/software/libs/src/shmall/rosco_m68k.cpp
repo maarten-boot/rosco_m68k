@@ -173,6 +173,10 @@ platform_done:
 }
 
 void* calloc(size_t num, size_t size) {
+    if (size != 0 && num > ((size_t) -1) / size) {
+        return NULL;        // num * size would overflow
+    }
+
     size_t total = num * size;
     void *mem = malloc(total);
 
@@ -184,6 +188,11 @@ void* calloc(size_t num, size_t size) {
 }
 
 void* realloc(void *ptr, size_t new_size) {
+    if (ptr != NULL && new_size == 0) {
+        free(ptr);          // previously leaked the old block
+        return NULL;
+    }
+
     void *new_ptr = malloc(new_size);
 
     if (ptr != NULL && new_ptr != NULL && new_size > 0) {
