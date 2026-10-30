@@ -1,0 +1,8 @@
+d@0x60000=0
+gtime #5000
+wpset 0xf00003,1,w,1,{b@(0x60004+d@0x60000)=wpdata; d@0x60000=d@0x60000+1; go}
+load $TESTS/t_api.bin,0x40000
+pc=0x40000
+gtime #2000
+save $OUT/csra.bin,0x60000,0x14
+go

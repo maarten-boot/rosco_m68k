@@ -1,0 +1,4 @@
+gtime #5000
+load $TESTS/t_k2.bin,0x40000
+pc=0x40000
+go

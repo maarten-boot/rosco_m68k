@@ -61,3 +61,10 @@
 - M5: Tests.md rewritten with 34 MAME/static test cases.
 - M6: first crosscheck recorded in Plan.md. Gaps: R-3 has no full API table; nothing has been built or run.
 - Proposed next milestones: M7 build for static checks, M8 run P1 tests in MAME, M9 decide where fixes go.
+
+## 6. Next step
+**User:** "yes, start with M7 and M8" (no corrections needed).
+- **M7:** found the docker toolchain recipe in `../rosco-emulator/roms/README.md` and rebuilt v2.42. The ROM is bit-identical to the emulator's `-bios v242`. Static checks: A-3 confirmed (worse than described: the copy source is the CODE section; in practice only `selected_drive` is affected), A-4 confirmed (`$02BC`), D-7 confirmed (libm.a has 313 members including printf and the other libs).
+- **M8:** the MAME build `rosco` has rosco_m68k_000/010/020/030. Confirmed at runtime: K-3, K-2, A-1, A-12, E-1, E-2, E-4, B-7, B-1. B-1 causes a crash/reboot loop.
+- **Correction:** debug_stub *is* in the default build (`WITH_DEBUG_STUB?=true`). The M3c note and A-19 were updated.
+- Test sources and MAME scripts saved in `docs/planning/tests/`.

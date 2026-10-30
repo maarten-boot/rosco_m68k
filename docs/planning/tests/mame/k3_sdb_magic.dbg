@@ -1,0 +1,5 @@
+bpset 0xe06838,1,{save $OUT/A.bin,0x400,4; save $OUT/At.bin,0x40c,4; go}
+gtime #4500
+save $OUT/B.bin,0x400,4
+save $OUT/Bt.bin,0x40c,4
+go
