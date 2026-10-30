@@ -73,3 +73,12 @@
 **User:** "commit the first round"
 **Claude:** everything was already committed (5 commits on `planning/session-docs`, working tree clean, branch not pushed). Asked whether "commit" means push, squash into one commit, tag, or open a PR.
 **User:** "tag it , i can push you can't" — decision: annotated tag `review-round-1`. The user pushes; Claude does not push.
+
+## 8. Status, prune, M8b
+**User:** "status?" → reported: branch pushed by the user, tag `review-round-1` is local (whether it is on the remote could not be checked), M8 partial, M8b/M9 open.
+**User:** "prune it, then start M8b" — pruned the stale scratchpad worktree; started M8b.
+- **M8b:** the scratchpad had been cleared, so v2.42 and the libs were rebuilt (ROM SHA1 unchanged).
+  - **Confirmed:** K-1 (vector $10 → $72FAE), K-4 (old_irq3 self-chain after warm boot), E-6, V-1, D-2, D-6, D-8, D-12.
+  - **Partly confirmed:** E-3 (masked: byte @1 = $10), B-4 (benign: "Ignoring unrecognised SD card"), D-4 (tab only).
+  - **Not reproduced:** D-5.
+  - **Not testable:** X-* and V-3 (MAME has no Xosera/V9958 model), B-2 (no host kermit).
