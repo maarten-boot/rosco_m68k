@@ -73,6 +73,10 @@ bool load_kernel_bin(void *file) {
         uint32_t total_ticks = sdb->upticks - start;
         uint32_t total_secs = (total_ticks + 50) / 100;
         uint32_t load_size = current_load_ptr - kernel_load_ptr;
+        if (load_size == 0) {
+            mcPrint("*** Kernel file is empty\r\n");
+            return false;
+        }
         mcPrint("Loaded ");
         print_unsigned(load_size, 10);
         mcPrint(" bytes in ~");
@@ -266,7 +270,10 @@ bool load_kernel(PartHandle *part) {
             print_unsigned(load_part_num + 1, 10);  // Print partition numbers as 1-indexed
             mcPrint(": ");
 
-            fl_attach_media(media_read, media_write);
+            if (fl_attach_media(media_read, media_write) != FAT_INIT_OK) {
+                mcPrint("(no FAT filesystem)\r\n");
+                continue;
+            }
 
             void *file;
             if ((file = fl_fopen(FILENAME_BIN, "r"))) {
