@@ -301,8 +301,8 @@ e68PrintStrNumSigned::
 ; Modifies: Nothing
 e68PrintStrReadNumSigned::
     movem.l D1/A1,-(A7)               ; Save regs
-    move.l  (12,A7),D1                ; Get str from the stack into A1
-    move.l  #18,D0                    ; Func code is 16
+    move.l  (12,A7),A1                ; Get str from the stack into A1
+    move.l  #18,D0                    ; Func code is 18
     trap    #15                       ; TRAP to Easy68k firmware
     move.l  D1,D0                     ; Move result for return
     movem.l (A7)+,D1/A1               ; Restore regs
