@@ -155,3 +155,19 @@
   - D-3: memmove/memcmp.
 - **D-17 (sst_flash) held:** it cannot be tested in MAME, and it carries brick risk. Asking the user.
 - maint/2.42 is now 40 commits on v2.42 (head bc00173).
+
+## 14. D-17 option 2, then develop ports
+**User:** "option 2 for D-17, then the develop ports" (no corrections needed). D-17 is limited to adding a timeout to the toggle-bit wait.
+- **D-17 option 2:** wait() is bounded at 1,000,000 polls ($\approx$5 s at 10 MHz).
+  - **Tested:** with simulated stuck-toggle flash, returns false after ~5.2 s. The first cap (4M) gave 21 s and was lowered.
+- **Side question from the user:** "could we update mame to support the flash rom for rosco?"
+  - **Answer:** yes. MAME has `sst_39sf040_device`; the driver needs two interleaved flash devices plus NVRAM. Added as proposed M12 (rosco-emulator repo).
+- **CRLF mistake #2:** the D-8 commit had converted printf.c to LF; the post-batch CRLF check had only run before batch 3.
+  - **Fix:** maint/2.42 was not yet pushed, so its tail was rewritten (D-8/D-3/D-17 → 48d16e3/acc18d6/4540743). A first attempt committed the unstaged index; caught by the CRLF re-check and redone with `git add`.
+- **Develop ports:** 30 fix/* branches created.
+  - **Path remap:** for stage1/.
+  - **Manual handling:** A-2 (stage1/common.c only), D-2 (libs only), B-6 (on fix/B-5), D-8 (`git am --keep-cr`).
+  - **B-17:** already fixed on develop.
+  - **Build test:** caught `mcPrint` → `FW_PRINT_C` in the B-1/B-3 ports (amended).
+  - **Integration:** builds; MAME smoke test shows develop bugs A-12/E-1/E-2/E-4/E-8 fixed by the ports.
+- **New upstream finding U-1:** develop `MAME=true` build fails (unused label have_kernel).

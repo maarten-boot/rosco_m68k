@@ -116,3 +116,8 @@ New findings from R-3 (✔ = checked in source by the main session):
 | A-22 | Doc text for SPI chip-select pins and SDB flag bits 14-10 ("MUST BE 1 for SPI/SD") describes r1.x/MFP behaviour; nothing in the r2.x build enforces them | doc | partial |
 
 Refinements: A-12 (PRINT/PRINTLN trash D0) happens only on the serial console; the V9958 and Xosera consoles preserve D0. E-6 is a 0-based doc against 1-based ANSI addressing, not a loop bug.
+
+## Corrections and new items (M10, 2026-10-30)
+- **B-17 is already fixed on develop.** Its load.c refuses 0-byte kernels ("SEVERE: Loaded 0 bytes") and checks the `fl_attach_media()` result; the M3b report had said "unknown". No develop port is needed.
+- **U-1 (new, develop only):** `make MAME=true` on develop fails with `main2.c:228: label 'have_kernel' defined but not used [-Werror=unused-label]`. Upstream issue candidate.
+- **Develop ports:** 30 branches off develop: fix/A-1 fix/A-12 fix/A-2-B-14 fix/A-4 fix/A-9 fix/B-1 fix/B-12-B-20-E-4-E-5-E-9 fix/B-2 fix/B-3 fix/B-4 fix/B-5 fix/B-6 fix/D-1 fix/D-11 fix/D-12 fix/D-13 fix/D-14 fix/D-17 fix/D-2-B-13 fix/D-3 fix/D-4 fix/D-6 fix/D-7 fix/D-8 fix/E-1-E-8 fix/E-2 fix/E-3 fix/E-4 fix/E-5 fix/E-6 . B-6 is based on fix/B-5. The A-2 port touches only stage1/common.c, and the D-2 port only the libs (develop has no stage-local memcpy). B-1/B-3 use `FW_PRINT_C` (develop renamed mcPrint).

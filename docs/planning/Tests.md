@@ -111,3 +111,18 @@ Note: the earlier test programs that call fixed ROM addresses (`t_div`, `t_misc`
 | T-D8 | printf %e/%g/long long, _ftoa/_etoa | **PASS**: "%lld\|%d" → 7\|99; "%e\|%d" → 1.500000e+00\|99; %f(1e10) → 1.000000e+10 with n = strlen; %e of 1e10, 1e-5, 123456.789, 9.99999e7, 1.0, 0.0 all correct (0.0 was e-308) |
 | T-D3 (new) | memmove/memcmp | **PASS**: overlapping memmove both directions; memcmp sign correct. All 18 example programs build |
 | D-17 | sst_flash | **not changed**: MAME maps the ROM read-only (no SST command model), so flash code cannot be tested; held for a user decision |
+
+### D-17 (timeout only) on maint/2.42
+| Test | Result |
+|------|--------|
+| T-D17 (new) | **PASS**: RAM stand-in for the flash (`sst_timeout_test.c`). Normal: write_byte/sector_erase return 1 immediately. With DQ6 forced to toggle on every read (`mame/sst_stuck.dbg`): both return 0 after ~5.2 s (1,000,000 polls) instead of hanging. updateflash still builds. Real flashing remains untested (MAME maps the ROM read-only) |
+
+### develop ports (fix/* branches), smoke test 2026-10-30
+Build: all 30 `fix/*` branches merged into a temporary integration branch without conflicts. The 256 KB ROM and libs build with `m68k-elf-rosco-gcc` 13.3.1. (The 1 MB build needs the ROMFS submodules, which are not fetched; develop's own `MAME=true` build fails upstream, see U-1 in Findings.)
+| Test (t_easy_m) | develop | develop + ports |
+|------|---------|-----------------|
+| A-12 PRINT keeps D0 | $DEADBE00 ✗ | $DEADBEEF ✔ |
+| E-2 print 0 | [] ✗ | [0] ✔ |
+| E-4 task 8 = uptime | $00, $17 (heartbeat) ✗ | $2BC, $2D7 ✔ |
+| E-8 A0 preserved | $00E053F8 ✗ | $12345678 ✔ |
+| E-1 task 21 | bus error ✗ | returns, SP unchanged ✔ |

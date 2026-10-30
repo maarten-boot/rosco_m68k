@@ -1,0 +1,4 @@
+gtime #6000
+load $PROG/m8b_sst.bin,0x40000
+pc=0x40000
+go
