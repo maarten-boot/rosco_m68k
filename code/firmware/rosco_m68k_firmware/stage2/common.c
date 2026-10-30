@@ -35,7 +35,7 @@ void* memcpy(const void *dest, const void *src, long unsigned int n) {
     for (uint8_t *end = fbuf + n; fbuf < end; *tbuf++ = *fbuf++)
         ;
 
-    return tbuf;
+    return (void*) dest;
 }
 
 size_t strlen(const char *s) {
