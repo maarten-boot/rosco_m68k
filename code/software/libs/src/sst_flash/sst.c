@@ -28,15 +28,30 @@ static void write(uint32_t addr, uint8_t data) {
     *p = data;
 }
 
-static void wait(uint32_t addr) {
+// Upper bound on toggle-bit polls. Interrupts are masked while flashing
+// (the handlers live in this ROM), so the tick counter cannot be used.
+// SST39SF0x0 worst case is 100ms (chip erase). One poll takes ~5us at
+// 10MHz (measured in MAME), so this gives up after ~5s there and still
+// waits ~0.3s on a fast cached 68030. It only matters if the chip never
+// finishes.
+#define SST_MAX_POLLS   1000000UL
+
+// Wait for an erase/program operation to finish (DQ6 stops toggling).
+// Returns false if it is still toggling after SST_MAX_POLLS reads.
+static bool wait(uint32_t addr) {
     volatile uint8_t *p = (uint8_t*)addr;
 
     uint8_t last = (*p) & 0x40;
     uint8_t this;
 
-    while ((this = ((*p) & 0x40)) != last) {
+    for (uint32_t polls = 0; (this = ((*p) & 0x40)) != last; polls++) {
+        if (polls >= SST_MAX_POLLS) {
+            return false;
+        }
         last = this;
     }
+
+    return true;
 }
 
 static void unlock(uint32_t rom_base) {
@@ -61,7 +76,9 @@ bool sst_sector_erase(uint32_t rom_base, uint8_t sector) {
     } else {
         unlock(rom_base);
         write(rom_base | (sector << 13), SST_SUBCMD_SECERASE);
-        wait(rom_base);
+        if (!wait(rom_base)) {
+            return false;
+        }
     }
 
     return true;
@@ -74,7 +91,9 @@ bool sst_chip_erase(uint32_t rom_base) {
     } else {
         unlock(rom_base);
         write(rom_base | SST_UNLOCK_A1, SST_SUBCMD_CHPERASE);
-        wait(rom_base);
+        if (!wait(rom_base)) {
+            return false;
+        }
     }
 
     return true;
@@ -85,7 +104,9 @@ bool sst_write_byte(uint32_t rom_base, uint32_t byte_addr, uint8_t data) {
         return false;
     } else {
         write(rom_base | (byte_addr << 1), data);
-        wait(rom_base);
+        if (!wait(rom_base)) {
+            return false;
+        }
     }
 
     return true;
