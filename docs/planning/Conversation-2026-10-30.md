@@ -318,3 +318,6 @@
 **User:** "pushed, now crosscheck spec, plan and code" (no corrections needed).
 - **Result:** consistent, nothing new in this repo. Plan crosscheck row (22) added.
 - **Observed in ../rosco-emulator (not touched):** checkout on docs/crosscheck-2026-10-30 with 2 uncommitted files (its own Spec.md, Tests.md); master has PR #6 (feature/sst-flash) and PR #7 (docs/planning) merged.
+
+## 42. Tag round 11
+**User:** "pushed, tag it as review-round-11" (no corrections needed). Annotated tag on planning/session-docs, as for the earlier rounds.
