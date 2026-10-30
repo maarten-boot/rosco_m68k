@@ -178,6 +178,7 @@ bool SD_read_block(SDCard *sd, uint32_t block, void *buf);
 **Modifies**
 
 * `D0.L` - Return value
+* `A0`   - Modified arbitrarily (as for all TRAP 13 functions)
 
 **Description**
 
@@ -300,6 +301,7 @@ indicates success.
 **Modifies**
 
 * `D0.L` - Return value
+* `A0`   - Modified arbitrarily (as for all TRAP 13 functions)
 
 **Description**
 
@@ -322,13 +324,17 @@ routine is retained to allow easy backward-compatibility.
 
 **Modifies**
 
-* `D0.L` - Result (0 = OK, otherwise failed)
+* `D0.L` - Result (nonzero = OK; the current implementation always returns 1)
 * `A0`   - Modified arbitrarily
 
 **Description**
 
 Initialize the SPI interface. This sets the SPI pins to the 
 appropriate modes (input vs output).
+
+Note: earlier versions of this document said `0 = OK`. The firmware has
+always returned `1` (true) on success, which matches the
+`SPI_ASSERT_CS`/`SPI_DEASSERT_CS` convention (0 = failed).
 
 #### 1.1.2.8 SPI_ASSERT_CS (Function #7)
 
@@ -479,6 +485,7 @@ Note that the buffer pointer may be modified, so keep a copy locally.
 **Modifies**
 
 * `D0.L` - Return value
+* `A0`   - Modified arbitrarily (as for all TRAP 13 functions)
 
 **Description**
 
@@ -1198,8 +1205,9 @@ Display single character in D1.B.
 
 **Description**
 
-Set D1.B to 1 if keyboard input is pending, otherwise set to 0. 
-Use Function 5 to read pending key.
+Set D1.B to 1 if input is pending on the default UART (the device that
+Function 5 reads from), otherwise set to 0. Use Function 5 to read the
+pending character.
 
 **Notes**
 
@@ -1246,11 +1254,10 @@ clock this just returns the system tick counter from the system data
 block (SDB), which is updated by the system tick handler (driven by a 
 programmable interrupt which may be disabled).
 
-Unfortunately this counter is only word-sized, and will roll over every
-655.36 seconds (or 10.92 minutes if you prefer). It also isn't updated at
-exactly 100HZ, so all-in-all this isn't really going to return "hundredths 
-of a second since boot" unless you aren't particularly strict with your 
-definition of "hundredths" and the computer was started less than ~11 minutes ago.
+The value is the 32-bit `SDB_UPTICKS` counter ($40C), so it rolls over only
+after ~497 days. (Firmware before 2.42.1 returned the word at $408, which is
+the heartbeat down-counter, not an uptime.) It isn't updated at exactly 100HZ,
+so don't rely on it for precision timing.
 
 If you do need any kind of precision timing, you'll have to design some sort
 of expansion that connects to the expansion bus :) 
@@ -1268,6 +1275,9 @@ Nothing
 **Description**
 
 Terminate the program (Disables interrupts and halts the CPU).
+
+This halts directly; it does not go through `EFP_HALT`, so replacing that
+EFP has no effect on this task.
 
 This will never return - the only way back is through wetware
 intervention.

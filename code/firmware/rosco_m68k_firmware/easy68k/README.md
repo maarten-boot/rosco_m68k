@@ -80,10 +80,9 @@ So, if you must use this task, keep all this in mind!
 Easy68K defines task #8 as returning the count of "hundredths of a second since midnight", but since we 
 don't have a real-time clock this just returns the system tick counter from the system data block (SDB).
 
-Unfortunately this counter is only word-sized, and will roll over every 655.36 seconds
-(or 10.92 minutes if you prefer). It also isn't updated at exactly 100HZ, so all-in-all this isn't 
-really going to return "hundredths of a second since boot" unless you aren't particularly strict with
-your definition of "hundredths" and the computer was started less than ~11 minutes ago.
+The value is the 32-bit `SDB_UPTICKS` counter ($40C), so it rolls over only after ~497 days.
+(Before 2.42.1 this task returned the word at $408, the heartbeat down-counter.) It isn't updated at
+exactly 100HZ, so don't rely on it for precision timing.
 
 If you do need any kind of precision timing, you'll have to design some sort of expansion that connects
 to the expansion bus :) 
