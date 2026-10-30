@@ -38,7 +38,7 @@ void *memcpy(void *__restrict s1, const void *__restrict s2, size_t n) {
     for (uint8_t *end = fbuf + n; fbuf < end; *tbuf++ = *fbuf++)
         ;
 
-    return tbuf;
+    return s1;
 }
 
 void *memset(void *s, int c, size_t n) {
