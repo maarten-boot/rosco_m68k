@@ -15,17 +15,22 @@ _Status: agreed scope 2026-10-30._
 ## 2. Requirements
 | ID | Requirement | Source (log date) |
 |----|-------------|-------------------|
-| R-1 | Find correctness errors (bugs, crashes, register/ABI misuse, hardware access errors) in the v2.42 firmware. | 2026-10-30 |
-| R-2 | Find correctness errors in the v2.42 user libraries. | 2026-10-30 |
+| R-1 | Find correctness errors (bugs, crashes, register/ABI misuse, hardware access errors) in the v2.42 firmware. | 2026-10-30 — **met**: reviews/M3a–c, Findings.md (A/B/K/E/V/X/S + B-19…B-21, A-22, E-8/E-9); runtime-confirmed items marked ★ |
+| R-2 | Find correctness errors in the v2.42 user libraries. | 2026-10-30 — **met**: reviews/M3d, Findings.md D-1…D-20 |
 | R-3 | "Missing": list the functions documented in `InterfaceReference.md` that are not implemented, or are implemented differently. | 2026-10-30 — **met** by `reviews/R3-interface-table.md` (117 rows) |
-| R-4 | "Missing": list the TODO/FIXME/stub/unimplemented paths. | 2026-10-30 |
-| R-5 | "Missing": list r2.x hardware features that have no driver or only partial support. | 2026-10-30 |
-| R-6 | List the fixes on `develop` after v2.42 that affect an r2.x 1M board, so the user can decide whether to upgrade. | 2026-10-30 |
-| R-7 | For each finding, record the file:line at v2.42, the severity, the evidence, and whether `develop` already fixes it. | 2026-10-30 |
-| R-8 | Record findings that need runtime confirmation as MAME test cases in `Tests.md`. | 2026-10-30 |
+| R-4 | "Missing": list the TODO/FIXME/stub/unimplemented paths. | 2026-10-30 — **met**: Findings P5 + A-16, B-18, E-7, K-7 (TODO/stub lists) |
+| R-5 | "Missing": list r2.x hardware features that have no driver or only partial support. | 2026-10-30 — **met** for r2.x as reviewed (Findings P5); the user's board has no extra hardware fitted |
+| R-6 | List the fixes on `develop` after v2.42 that affect an r2.x 1M board, so the user can decide whether to upgrade. | 2026-10-30 — **met**: reviews/M3e-develop-diff.md |
+| R-7 | For each finding, record the file:line at v2.42, the severity, the evidence, and whether `develop` already fixes it. | 2026-10-30 — **met**: reviews/M3*.md tables (file:line, severity, evidence, develop status) |
+| R-8 | Record findings that need runtime confirmation as MAME test cases in `Tests.md`. | 2026-10-30 — **met**: Tests.md (0 pending). Not testable here: X-*, V-3, B-6 (slow cards), D-13/D-14 (no m68k gdb) |
 | R-9 | For each finding, propose a fix target (backport from develop / new fix / build flag / doc / defer) with effort and the test that verifies it. The user decides strategy, hardware scope, kernel use and upstreaming. | 2026-10-30 — `FixStrategy.md`; decisions D1–D4 taken; maint/2.42 + fix/* branches done; upstream issue drafts in `issues/` |
+| R-10 | (added 2026-10-30, M9/M10) Implement the chosen fixes as a maintenance release `maint/2.42` → tag `v2.42.1`: one commit per finding, the matching test re-run after each batch, line endings preserved. | 2026-10-30 — **met**: 42 commits; v2.42.1 builds bit-identical to the tested ROM (SHA1 f2d1344d…) |
+| R-11 | (added 2026-10-30, M10b/M11) Port the new fixes to `fix/<ID>` branches off develop and draft upstream issue texts; the user pushes and files. | 2026-10-30 — **met**: 30 branches (integration build + MAME smoke test); issues/01–21 |
+| R-12 | (added 2026-10-30, M12) Make the ROM flash-programmable in the MAME emulator (`../rosco-emulator` feature/sst-flash) so the flash tools can be tested. | 2026-10-30 — **met**: updateflash 2.42 → 2.42.1 end-to-end; tag review-round-2 |
+
 
 ## 3. UI colour and contrast (applies to any GUI/TUI component)
+_Not applicable in this project so far: no GUI or TUI was built (all output is serial console text). Kept as a standing rule._
 - UI-1: The default theme uses a white background with black text.
 - UI-2: Every foreground/background pair has a WCAG contrast ratio of at least 4.5:1.
 - UI-3: The user can raise contrast at runtime with presets AA (4.5), AAA (7), Max (21) and a custom minimum.

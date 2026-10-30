@@ -111,5 +111,5 @@ A-6/A-7 (040/060 only), A-14 (TX FIFO, performance), A-15 (dead r1 fallback), A-
 5. Flashing real hardware is done only by you. Claude never flashes and only produces the ROM image plus checksums.
 
 ## 4. Status 2026-10-30
-- **maint/2.42:** 41 commits on v2.42, head 4540743 (history rewritten before any push to fix a CRLF→LF conversion of printf.c in the D-8 commit; content unchanged).
+- **maint/2.42:** 42 commits on v2.42, head fa01377, tagged **v2.42.1** (history was rewritten once before the first push to fix a CRLF→LF conversion of printf.c in the D-8 commit; content unchanged).
 - **develop ports:** 30 local `fix/*` branches, all building together. Not pushed: the user decides upstreaming; M11 will draft the issue texts.

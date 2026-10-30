@@ -214,3 +214,18 @@
 
 ## 20. Push everything
 **User:** "give me one command to push everything in both repos" (no corrections needed). Claude gave one combined command (branches plus annotated tags in both repos); the user pushes.
+
+## 21. Crosscheck after the push
+**User:** "pushed, now crosscheck spec, plan and code" (no corrections needed).
+- **Remote:** 33/33 branches and feature/sst-flash equal origin. Tags can't be checked (no SSH access from this host).
+- **Code ↔ docs:**
+  - Every PASS has a maint commit, or is a backport or kernel item.
+  - fix/* branches and issue references match one-to-one.
+  - 0 pending tests.
+  - A clean build of v2.42.1 equals the tested ROM (f2d1344d…), and the libs build.
+- **Doc gaps fixed:**
+  - Spec R-1…R-8 statuses filled in.
+  - R-10…R-12 added for the M9–M12 work beyond the original scope.
+  - UI rules marked N/A.
+  - Plan M8/M10 statuses updated.
+  - Stale "41 commits/4540743" and the rewritten hash bc00173 corrected.

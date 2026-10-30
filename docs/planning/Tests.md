@@ -102,7 +102,7 @@ Note: the earlier test programs that call fixed ROM addresses (`t_div`, `t_misc`
 | B-2, B-3, D-13, D-14 | Kermit bound, ELF filesz, gdb mask/SR | built; not runtime-tested (no host kermit/gdb; malformed ELF not built) |
 | Regression | boot 000/010/020, 5 MB RAM, SD boot, IDE boot, SDB magic | **PASS** |
 
-### Version bump + batch 3 (2026-10-30, ROM SHA1 f2d1344d…, maint/2.42 @ bc00173, 40 commits)
+### Version bump + batch 3 (2026-10-30, ROM SHA1 f2d1344d…, maint/2.42 @ bc00173, 40 commits; after the pre-push history rewrite this is acc18d6. The ROM is unchanged and is what tag v2.42.1 builds)
 | Test | Fix | Result |
 |------|-----|--------|
 | Banner | 2.42.1 | **PASS**: "Classic 2.42.1"; version word unchanged at $60000242 (user decision: banner only) |
