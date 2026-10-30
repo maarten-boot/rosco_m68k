@@ -12,6 +12,7 @@ ifneq ($(HUGEROM),false)
 ifeq ($(WITH_ATA),true)
 OBJECTS := $(OBJECTS) blockdev/ata_disable_interrupt.o blockdev/ata.o
 EXTRA_CFLAGS := $(EXTRA_CFLAGS) -DROSCO_M68K_ATA
+DEFINES := $(DEFINES) -DROSCO_M68K_ATA
 endif
 
 BD_CFLAGS=-std=c11 -ffreestanding -nostartfiles -Wall -Werror   			\
